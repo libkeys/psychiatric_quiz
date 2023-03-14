@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./image/favicon-kubsu.png" type="image/x-icon">
+    <link rel="stylesheet" href="styles/style.css">
+    <title>Мониторинг</title>
+</head>
+<body>
+    <div class="wrapper">
+
+        <header class="header">
+
+            <div class="container">
+
+                <div class="header__container">
+
+                    <div class="first-page__logo">
+                        <img src="./image/первый экран/header лого+текст.svg" alt="logo">
+                    </div>
+                    <div class="first-page__info">
+                        <img src="./image/первый экран/header faq.svg" alt="information">
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+        <div class="main">
+
+            <div class="container">
+
+                <div class="title">
+
+                    <p class="title__text-title">   
+                        Поиск ученика
+                    </p> 
+                        
+                </div>
+                
+                <div class="form">
+
+                    <form action="#" class="form__addstudent">
+
+                        <div class="form__element">
+                            <label class="form__label">Имя ученика</label>
+                            <input type="text" class="form__input" placeholder="Иван">
+                        </div>
+
+                        <div class="form__element">
+                            <label class="form__label">Фамилия</label>
+                            <input type="text" class="form__input" placeholder="Иванов">
+                        </div>
+
+                        <div class="form__element">
+                            <label class="form__label">Отчество</label>
+                            <input type="text" class="form__input" placeholder="Иванович">
+                        </div>
+
+                        <div class="form__element">
+                            <label class="form__label">Класс</label>
+                            <select class="form__input form__select" id="inp-sele" placeholder="Класс">
+                                <option selected disabled hidden>Выберите класс</option>
+                            </select>
+                        </div>
+
+                    </form>
+                            
+                </div>
+
+                <div class="main__two-button button">
+
+                    
+                    <div class="button__container button__container--blue">
+                        
+                        <div class="button__text button__text--white">
+                            
+                            Показать всех
+                            
+                        </div>
+                        
+                    </div>
+
+                    <div onclick="bowToaddstudent()" class="button__container button__container--two-button">
+
+                        <div class="button__text">
+
+                            Добавить нового ученика
+
+                        </div>
+
+                        <div class="button__row">
+
+                            <img src="image/beegining of work/bow__row-icon.svg" alt="">
+
+                        </div>
+
+                    </div>
+            
+                </div>
+
+                <div class="list">
+
+                    <div class="main__subtitle">
+
+                        <p class="main__text-subtitle main__text-subtitle--left">   
+                            По вашему запросу найдено: 
+                        </p> 
+
+                    </div>
+
+                    <div class="list__container" id="ul-st2">
+
+                        <ul id="ul-st">
+
+                            <li id="ul-st3"> <a href="student_page.html">Валерий Жмышенко</a></li> 
+                            <!-- добавить after -->
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+        
+        </div>    
+
+        <footer class="footer">
+
+            <div class="container">
+
+                <div class="footer__kubsu-block">
+    
+                        <img src="./image/первый экран/footer kubsu logo.svg" alt="kubsulogo">
+                                
+                        <p class="footer__text">
+                            Кубанский государственный университет, 2022
+                        </p>
+                            
+                </div>
+
+            </div>
+
+        </footer>
+
+    </div>
+<script src="js/search.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

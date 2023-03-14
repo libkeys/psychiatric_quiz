@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./image/favicon-kubsu.png" type="image/x-icon">
+    <link rel="stylesheet" href="styles/style.css">
+    <title>Мониторинг</title>
+</head>
+<body>
+    
+    <div class="wrapper">
+
+        <header class="header">
+
+            <div class="container">
+
+                <div class="header__container">
+
+                    <div class="first-page__logo">
+                        <img src="./image/первый экран/header лого+текст.svg" alt="logo">
+                    </div>
+                    <div class="first-page__info">
+                        <img src="./image/первый экран/header faq.svg" alt="information">
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+        <div class="main">
+
+            <div class="container">
+            
+                <div class="title">
+    
+                    <p class="title__text-title">   
+                        Наблюдение
+                    </p> 
+                        
+                </div>
+
+                <div class="list">
+                        <div class="list__container">
+                            <div class="list__title">
+                                <p>Личностные базовые учебные действия</p>
+                            </div>
+
+                            <div class="list__elem-block" >
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text" id="open-ul" >
+                                    Осознание себя как ученика, заинтересованного посещением школы, обучением, занятиями, как члена семьи, одноклассника, друга 
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                                
+                            </div>
+                          
+
+                                    <ul onclick="ms2ToTest()" class="list__ul" id="ul">
+                                        <li>
+                                            проявляет ответственное поведение (трансляция заданий учителя дома взрослым, беспокойство по поводу соблюдения требований)
+                                        </li>
+                                        <li>
+                                            следит за своим внешним видом, аккуратно и сдержанно принимает пищу
+                                        </li>
+                                        
+                                    </ul>
+                               
+
+                            <div class="list__elem-block">
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text" id="open-ul">
+                                    Способность к осмыслению социального окружения, своего места в нем, принятие соответствующих возрасту социальных ролей       
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                                
+                            </div>
+                            <ul onclick="ms2ToTest2()" class="list__ul" id="ul">
+                                <li>
+                                    знает свои обязанности в соответствии с социальной ролью
+                                </li>
+                                <li>
+                                    соблюдает правила поведения во время посещения общественных мест, культурно-значимых объектов
+                                </li>
+                                <li>
+                                    обращается на Вы ко взрослым
+                                </li>
+                                <li>
+                                    контролирует потенциально неприятные другим естественные проявления
+                                </li>
+                            </ul>
+
+                            <div class="list__elem-block">
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text" id="open-ul">
+                                    Положительное отношение к окружающей действительности, готовность к организации взаимодействия с ней и эстетическому ее восприятию                                
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">  
+                            </div>
+                            <ul onclick="ms2ToTest3()" class="list__ul" id="ul">
+                                <li>
+                                    проявляет вежливость вербально и невербально при общении с другими людьми (улыбка при встрече, обращении)
+                                </li>
+                                <li>
+                                    сочувствует другим при затруднениях и неприятностях
+                                </li>
+                                <li>
+                                    проявляет заинтересованность в процессе прослушивания музыкальных и литературных произведений
+                                </li>
+                                <li>
+                                    стремится поддерживать порядок и чистоту вокруг себя, быть красивым
+                                </li>
+                                <li>
+                                    способен делиться с другими
+                                </li>
+                            </ul>
+
+                            <div class="list__elem-block" >
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text">
+                                    Целостный, социально ориентированный взгляд на мир в единстве его природной и социальной частей                                
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                            </div>
+                            <ul onclick="ms2ToTest4()" class="list__ul" id="ul">
+                                <li>
+                                    замечает красоту в природе, окружающем предметном мире и в людях
+                                </li>
+                                <li>
+                                    делает попытки самостоятельно создавать что-либо красивое
+                                </li>
+                                <li>
+                                    стремится слушать книги, музыку, с желанием посещает внеурочные занятия
+                                </li>
+                                
+                            </ul>
+
+                            <div class="list__elem-block" >
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text">
+                                    Самостоятельность в выполнении учебных заданий, поручений, договоренностей                               
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                            </div>
+                            <ul onclick="ms2ToTest5()" class="list__ul" id="ul">
+                                <li>
+                                    может самостоятельно выполнять доступные учебные задания
+                                </li>
+                                <li>
+                                    без напоминаний выполняет поручения взрослого, следует договоренности, участвует в уборке класса, стремится овладеть какими-либо потенциально доступными бытовыми и трудовыми умениями
+                                </li>
+                                <li>
+                                    стремится к совершенствованию речевых, двигательных, коммуникативных умений
+                                </li>
+                                <li>
+                                    оказывает родителям посильную помощь по дому (накрыть на стол и убрать посуду, вымыть посуду, навести порядок в комнате, вытереть пыль, пропылесосить, подмести, вынести мусор)
+                                </li>
+                            </ul>
+
+                            <div class="list__elem-block" >
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text">
+                                    Понимание личной ответственности за свои поступки на основе представлений об этических нормах и правилах поведения в современном обществе                                
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                            </div>
+                            <ul onclick="ms2ToTest6()" class="list__ul" id="ul">
+                                <li>
+                                    может признаться в неправильном поведении, правдиво отвечает на вопросы взрослых и детей
+                                </li>
+                            </ul>
+
+                            <div class="list__elem-block" >
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text">
+                                    Готовность к безопасному и бережному поведению в природе и обществе                                
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                            </div>
+                            <ul onclick="ms2ToTest7()" class="list__ul" id="ul">
+                                <li>
+                                    имеет представления о правилах питания, полезных и вредных продуктах
+                                </li>
+                                <li>
+                                    соблюдает правила личной гигиены, может одеваться в соответствии с погодными условиями и социальной ситуацией
+                                </li>
+                                <li>
+                                    соблюдает правила безопасного поведения (во время прогулки, на городской улице, в городском транспорте, при действиях с бытовыми электроприборами, инструментами и острыми предметами, огнем, водой, бытовой химией, лекарствами и др.)
+                                </li>
+                                <li>
+                                    адекватно ведет себя вести в магазине, поликлинике, общественном транспорте в кафе, кинотеатре, театре, музее
+                                </li>
+                                <li>
+                                    проявляет в поведении бережное отношение а) к школьному имуществу; б) к своим учебным принадлежностям и одежде
+                                </li>
+                            </ul>
+
+                            <div class="list__title">
+                                <p>Коммуникативные базовые учебные действия</p>
+                            </div>
+
+                            <div class="list__elem-block" >
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text">
+                                    Умение вступать в контакт и работать в коллективе 
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                            </div>
+                            <ul onclick="ms2ToTest8()" class="list__ul" id="ul">
+                                <li>
+                                    знает правила коммуникации в разных ситуациях
+                                </li>
+                                <li>
+                                    умеет обратиться с вопросом, просьбой;
+                                </li>
+                                <li>
+                                    может согласованно выполнять необходимые действия (игровые, трудовые, спортивные) в паре и в малой группе, не разрушая общего замысла
+                                </li>
+                            </ul>
+
+                            <div class="list__elem-block" >
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text">
+                                    Использование принятых ритуалов социального взаимодействия с одноклассниками и учителем 
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                            </div>
+                            <ul onclick="ms2ToTest9()" class="list__ul" id="ul">
+                                <li>
+                                    использует правила и ритуалы социального взаимодействия с одноклассниками и учителем
+                                </li>
+                                <li>
+                                    может контролировать импульсивные желания (не трогает чужие предметы без разрешения)
+                                </li>
+                            </ul>
+
+                            <div class="list__elem-block" >
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text">
+                                    Обращение за помощью и умение принимать помощь 
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                            </div>
+                            <ul onclick="ms2ToTest10()" class="list__ul" id="ul">
+                                <li>
+                                    обращается за помощью и использует помощь
+                                </li>
+                            </ul>
+
+                            <div class="list__elem-block" >
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text">
+                                    Умение сотрудничать с взрослыми и сверстниками в разных социальных ситуациях 
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                            </div>
+                            <ul onclick="ms2ToTest11()" class="list__ul" id="ul">
+                                <li>
+                                    сотрудничает с взрослыми и сверстниками в разных социальных ситуациях
+                                </li>
+                            </ul>
+
+                            <div class="list__elem-block" >
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text">
+                                    Доброжелательное отношение к другим людям, способность к сопереживанию и конструктивному взаимодействию с людьми 
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                            </div>
+                            <ul onclick="ms2ToTest12()" class="list__ul" id="ul">
+                                <li>
+                                    доброжелательно относится к другим людям; сопереживает другим людям
+                                </li>
+                                <li>
+                                    конструктивно взаимодействует с людьми
+                                </li>
+                            </ul>
+
+                            <div class="list__elem-block" >
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text">
+                                    Умение договариваться и изменять свое поведение в соответствии с объективным мнением большинства в конфликтных или иных ситуациях взаимодействия с окружающим 
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                            </div>
+                            <ul onclick="ms2ToTest13()" class="list__ul" id="ul">
+                                <li>
+                                    способен договариваться и изменять свое поведение в соответствии с объективным мнением большинства в конфликтных или иных ситуациях взаимодействия с окружающими
+                                </li>
+                               
+                            </ul>
+
+                            <div class="list__title">
+                                <p>Регулятивные БУД</p>
+                            </div>
+
+                            <div class="list__elem-block" >
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text">
+                                    Адекватное соблюдение ритуалов школьного поведения
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                            </div>
+                            <ul onclick="ms2ToTest14()" class="list__ul" id="ul">
+                                <li>
+                                    соблюдает правила поведения на уроке (встает для приветствия учителя в начале урока, поднимает руку для ответа и ждет, когда педагог предложит ответить, выполняет указания учителя и т. д.)
+                                </li>
+                            </ul>
+
+                            <div class="list__elem-block" >
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text">
+                                    Соотношение своих действий и их результатов с заданными образцами, принятие оценки деятельности, оценивание ее с учетом предложенных критериев, коррекция своей деятельности с учетом выявленных недочетов
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                            </div>
+                            <ul onclick="ms2ToTest15()" class="list__ul" id="ul">
+                                <li>
+                                    принимает от педагога оценку своей деятельности
+                                </li>
+                            </ul>
+
+                            <div class="list__title">
+                                <p>Познавательные базовые учебные действия</p>
+                            </div>
+
+                            <div class="list__elem-block" >
+                                <input type="checkbox" name="" id="">
+                                <p class="list__elem-text">
+                                    Наблюдение под руководством взрослого за предметами и явлениями окружающей действительности 
+                                </p>
+                                <img src="image/row_down.svg" class="list__elem-row" alt="">
+                            </div>
+                            <ul onclick="ms2ToTest16()" class="list__ul" id="ul">
+                                <li>
+                                    наблюдает под руководством взрослого за предметами и явлениями окружающей действительности
+                                </li>
+                            </ul>
+
+                        </div>
+
+                        <div class="main__two-button button">
+
+                            <div onclick="bowToaddstudent()" class="button__container button__container--two-button button__container--blue">
+            
+                                <div class="button__text--white">
+            
+                                    Начать мониторинг 
+            
+                                </div>
+            
+                                <div class="button__row">
+            
+                                    <img src="image/beegining of work/bow__row-icon.svg" alt="">
+            
+                                </div>
+            
+                            </div>
+                  
+            
+            
+            
+                        <div onclick="msToCh()" class="button__container">
+            
+                            <div class="button__text button__text--blue">
+            
+                                Назад
+            
+                            </div>
+                        </div>             
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        
+        <footer class="footer">
+            
+            <div class="container">
+                
+                <div class="footer__kubsu-block">
+                    
+                        <img src="./image/первый экран/footer kubsu logo.svg" alt="kubsulogo">
+                                
+                        <p class="footer__text">
+                            Кубанский государственный университет, 2022
+                        </p>
+                        
+                </div>
+                
+            </div>
+            
+        </footer>
+        
+    </div>
+    <script src="js/script.js"></script>
+    <script src="js/dropDownList.js"></script>
+</body>
+</html>
