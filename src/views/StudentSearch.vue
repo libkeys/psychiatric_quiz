@@ -1,3 +1,98 @@
+<script>
+export default {
+  data() {
+    return {
+      studentName: "",
+      studentSurname: "",
+      studentLastname: "",
+      studentClass: "Выберете класс",
+      addedClasses: [],
+      addedStudent: "",
+      students: [],
+    };
+  },
+  methods: {
+    getClasses() {
+      try {
+        let result = fetch("http://localhost:3000/get_classes", {
+          method: "GET",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then((data) => {
+          let answer = data.text();
+          return answer;
+        });
+
+        result.then((data) => {
+          this.addedClasses = JSON.parse(data);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    getStudent() {
+      let requestData = {
+        studentName: this.studentName,
+        studentSurname: this.studentSurname,
+        studentLastname: this.studentLastname,
+        studentClass: this.studentClass,
+      };
+      try {
+        let result = fetch("http://localhost:3000/get_student", {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        }).then((data) => {
+          let answer = data.text();
+          return answer;
+        });
+
+        result.then((data) => {
+          this.students = JSON.parse(data);
+          console.log(JSON.parse(data));
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    deleteStudent(studentID){
+      let requestData = {
+        id: studentID
+      }
+      try {
+        let result = fetch("http://localhost:3000/delete_student", {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        }).then((data) => {
+          let answer = data.text();
+          return answer;
+        });
+
+        result.then((data) => {
+          this.getClasses();
+          console.log(data)
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  },
+  created() {
+    this.getClasses();
+  },
+};
+</script>
+
+
 <template>
   <HeaderStandart />
   <div class="main">
@@ -10,29 +105,59 @@
         <form action="#" class="form__addstudent">
           <div class="form__element">
             <label class="form__label">Имя ученика</label>
-            <input type="text" class="form__input" placeholder="Иван" />
+            <input
+              v-model="studentName"
+              type="text"
+              class="form__input"
+              placeholder="Иван"
+            />
           </div>
 
           <div class="form__element">
             <label class="form__label">Фамилия</label>
-            <input type="text" class="form__input" placeholder="Иванов" />
+            <input
+              v-model="studentSurname"
+              type="text"
+              class="form__input"
+              placeholder="Иванов"
+            />
           </div>
 
           <div class="form__element">
             <label class="form__label">Отчество</label>
-            <input type="text" class="form__input" placeholder="Иванович" />
+            <input
+              v-model="studentLastname"
+              type="text"
+              class="form__input"
+              placeholder="Иванович"
+            />
           </div>
 
           <div class="form__element">
             <label class="form__label">Класс</label>
             <select
-              class="form__input form__select"
-              id="inp-sele"
-              placeholder="Класс"
+              class="form-select form-select-sm"
+              aria-label=".form-select-sm example"
+              v-model="studentClass"
             >
-              <option selected disabled hidden>Выберите класс</option>
+              <option selected>Выберете класс</option>
+              <option
+                v-for="classItem in addedClasses"
+                :key="classItem.id"
+                :value="classItem.id"
+              >
+                {{ classItem.classNumber + classItem.classLetter }}
+              </option>
             </select>
           </div>
+
+          <button
+            @click="getStudent"
+            type="button"
+            class="button-search btn btn-primary"
+          >
+            Найти
+          </button>
         </form>
       </div>
 
@@ -60,16 +185,42 @@
           </p>
         </div>
 
-        <div class="list__container" id="ul-st2">
-          <ul id="ul-st">
-            <li id="ul-st3">
-              <a href="student_page.html">Валерий Жмышенко</a>
-            </li>
-            <!-- добавить after -->
-          </ul>
+        <div class="list-classes">
+          <li v-for="student in students" :key="student.id">
+            <p class="list-classes__name">
+              {{ student.studentName }} {{ student.studentSurname }}
+              {{ student.studentLastname }}
+            </p>
+            <p class="list-classes__class">класс: {{ student.studentClass }}</p>
+            <button @click="deleteStudent(student.id)" class="btn btn-danger">удалить</button>
+          </li>
         </div>
       </div>
     </div>
   </div>
   <FooterStandart />
 </template>
+
+<style lang="scss">
+.button-search {
+  height: 44px;
+  margin-top: 20px;
+}
+.list-classes {
+  li {
+    p{
+      position: relative;
+    }
+    button{
+      margin-top: -5px;
+      margin-left: 75px;
+    }
+  }
+  &__name {
+    width: 300px;
+    text-align: left;
+  }
+  &__class {
+  }
+}
+</style>

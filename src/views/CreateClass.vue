@@ -4,7 +4,7 @@ import ClassItem from "../components/ClassItem.vue";
 export default {
   data() {
     return {
-      classNumber: "Выберите номер класса",
+      classNumber: "Выберете номер класса",
       classLetter: "",
       addedClasses: [],
     };
@@ -85,7 +85,7 @@ export default {
               aria-label=".form-select-sm example"
               v-model="classNumber"
             >
-              <option selected>Выберите номер класса</option>
+              <option selected>Выберете номер класса</option>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -128,7 +128,7 @@ export default {
       </div>
 
       <div class="list-classes">
-        <p>Вы добавили...</p>
+        <p >Вы добавили...</p>
         <ul>
           <ClassItem
             v-for="classItem in addedClasses"
