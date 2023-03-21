@@ -32,6 +32,7 @@ connection.connect(function (err) {
   }
 })
 
+app.use(cors({ origin: 'http://localhost:5173' }));
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -195,18 +196,18 @@ app.post('/get_student', function (request, response) {
   }
   if (requestData.studentSurname !== '') {
     requestSQL.surname = true;
-    requestSQL.string += ` where studentSurname like '${requestData.studentSurname}' `
+    requestSQL.string += ` where studentSurname like '%${requestData.studentSurname}%' `
   }
   if (requestData.studentLastname !== '') {
     requestSQL.lastname = true;
-    requestSQL.string += `${requestSQL.surname ? 'and' : 'where'} studentLastname like '${requestData.studentLastname}' `
+    requestSQL.string += `${requestSQL.surname ? 'and' : 'where'} studentLastname like '%${requestData.studentLastname}%' `
   }
   if (requestData.studentClass !== 'Выберете класс') {
     requestSQL.class = true;
     requestSQL.string += `${requestSQL.surname || requestSQL.lastname ? 'and' : 'where'} studentClass like '${requestData.studentClass}' `
   }
   if (requestSQL.name) {
-    requestSQL.string += `${requestSQL.surname || requestSQL.lastname || requestSQL.class ? 'and' : 'where'} studentName like '${requestData.studentName}' `
+    requestSQL.string += `${requestSQL.surname || requestSQL.lastname || requestSQL.class ? 'and' : 'where'} studentName like '%${requestData.studentName}%' `
   }
   requestSQL.string += ';';
   // if (requestData.studentName !== '') {
@@ -308,6 +309,205 @@ app.post('/get_student', function (request, response) {
     console.log(error)
   }
 })
+
+app.post('/delete_student', function (request, response) {
+  let requestData = request.body;
+  try {
+    let result = new Promise(function (resolve, reject) {
+      connection.query(`delete from students where id=${requestData.id};`,
+        function (err, results, fields) {
+          // console.log(results);
+          answer = {}
+          if (err !== null) {
+            answer.result = err;
+            answer.message = 'something went wrong'
+            reject(answer);
+          }
+          else {
+            answer.result = results;
+            answer.message = 'everything is fine'
+            resolve(answer);
+          }
+        }
+      )
+    })
+    result.then(data => {
+      console.log(data.result)
+      response.end(JSON.stringify(data.result))
+    }).catch(error => {
+      console.log(error)
+    })
+  }
+  catch (err) {
+    console.log(err)
+  }
+})
+
+app.get('/all_students', function (request, response) {
+  let requestData = request.body;
+  try {
+    let result = new Promise(function (resolve, reject) {
+      connection.query(`select * from students`,
+        function (err, results, fields) {
+          // console.log(results);
+          answer = {}
+          if (err !== null) {
+            answer.result = err;
+            answer.message = 'something went wrong'
+            reject(answer);
+          }
+          else {
+            answer.result = results;
+            answer.message = 'everything is fine'
+
+            let resultClasses = new Promise(function (resolve, reject) {
+              connection.query(`SELECT id, classNumber, classLetter FROM classes;`,
+                function (errClass, resultsClass, field) {
+                  if (errClass) {
+                    reject(errClass)
+                  }
+                  else {
+                    answer.result.forEach(element => {
+                      let objClass = resultsClass.find(elClass => elClass.id === element.studentClass)
+                      element.studentClass = objClass.classNumber + objClass.classLetter
+                    });
+                    resolve()
+                  }
+                })
+            })
+            resultClasses.then(data => {
+              response.end(JSON.stringify(answer.result))
+            }).catch(error => {
+              console.log(error)
+            })
+            resolve(answer);
+          }
+        }
+      )
+    })
+
+  }
+  catch (err) {
+    console.log(err)
+  }
+})
+
+let studentId = 1
+app.post('/save_id_student', function (request, response) {
+  studentId = request.body.id
+  console.log(studentId)
+  response.end(JSON.stringify(studentId))
+})
+
+app.get('/get_student_by_id', function (request, response) {
+  let requestSQL = `select * from students where id = ${studentId}`
+  try {
+    let result = new Promise(function (resolve, reject) {
+      connection.query(requestSQL,
+        function (err, results, fields) {
+          // console.log(results);
+          answer = {}
+          if (err !== null) {
+            answer.result = err;
+            answer.message = 'something went wrong'
+            console.log(err)
+            reject(answer);
+          }
+          else {
+            answer.result = results;
+            answer.message = 'everything is fine'
+            response.end(JSON.stringify(answer.result))
+            resolve(answer);
+          }
+        })
+    })
+  }
+  catch (error) {
+    console.log(error)
+  }
+})
+
+// Route to handle the incoming request
+app.post("/update_student", (req, res) => {
+  // Get the data from the request body
+  const { studentName, studentSurname, studentLastname, studentBirthDate, studentClassNumber, studentClassLetter } = req.body;
+
+  // Construct the SQL query to update the student's record in the database
+  function updateStudent(){
+    let resultGettingClass = new Promise(function (resolve, reject) {
+      connection.query(`select id from classes where classLetter = '${studentClassLetter}' and classNumber = ${studentClassNumber}`, function (err, results, fields) {
+        // console.log(results);
+        answer = {}
+        if (err !== null) {
+          answer.result = err;
+          answer.message = 'something went wrong'
+          console.log(err)
+          reject(answer);
+        }
+        else {
+          answer.result = results;
+          answer.message = 'everything is fine'
+          resolve(answer);
+        }
+      })
+    })
+    resultGettingClass.then(data => {
+      let idClass = data.result[0].id
+      const query = `UPDATE students SET studentClass = ${idClass}, studentName = '${studentName}', studentSurname = '${studentSurname}', studentLastname = '${studentLastname}', studentBirthDate = '${studentBirthDate}', classNumber = ${studentClassNumber}, classLetter = '${studentClassLetter}' WHERE id = ${studentId}`;
+      console.log(query)
+      // let queryUpdate = new Promise((resolve, reject) => {
+      // Execute the SQL query
+      connection.query(query, (error, results) => {
+        if (error) {
+          // Handle the error
+          console.error(error);
+          res.status(500).send("Error updating student record");
+        } else {
+          // console.log(results)
+          // Send a success response
+          res.send("Student record updated successfully");
+        }
+      });
+    })
+  }
+  // })
+
+  // queryUpdate.then(() => console.log('before'))
+  const queryCheckClassId = `SELECT id FROM classes WHERE classNumber = ${studentClassNumber} AND classLetter = '${studentClassLetter}'`;
+  connection.query(queryCheckClassId, (error, results) => {
+    if (error) {
+      console.log(error)
+    }
+    else {
+      if (results.length === 0) {
+        let result = new Promise(function (resolve, reject) {
+          connection.query(`INSERT INTO classes(classNumber, classLetter) VALUES (${studentClassNumber}, '${studentClassLetter}');`, function (err, results, fields) {
+            // console.log(results);
+            answer = {}
+            if (err !== null) {
+              answer.result = err;
+              answer.message = 'something went wrong'
+              reject(answer);
+            }
+            else {
+              answer.result = results;
+              answer.message = 'everything is fine'
+              resolve(answer);
+            }
+          })
+        })
+        result.then(data => {
+          console.log(data)
+        })
+        updateStudent()
+      }
+      else {
+        updateStudent()
+      }
+    }
+  })
+
+});
 
 app.listen(3000, () => {
   console.log('Server started on port 3000');
