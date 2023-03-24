@@ -303,7 +303,6 @@ app.post('/get_student', function (request, response) {
           }
         })
     })
-    // result.then(data => data.text()).then(data => console.log(data))
   }
   catch (error) {
     console.log(error)

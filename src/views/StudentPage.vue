@@ -130,7 +130,7 @@ export default {
 
           <div class="form__element">
             <label class="form__label">Дата рождения</label>
-            <p>{{ studentBirthDay }}</p>
+            <p>{{ studentBirthDate }}</p>
           </div>
 
           <div class="form__element form__element_margin">
@@ -183,10 +183,11 @@ export default {
           Обновить данные
         </div>
         <div class="button__container button__container--two-button">
-          <div onclick="abbsToDate()" class="button__text">
-            Перейти к мониторингу
-          </div>
-
+          <RouterLink to="../data_monitoring">
+            <div onclick="abbsToDate()" class="button__text">
+              Перейти к мониторингу
+            </div>
+          </RouterLink>
           <div class="button__row">
             <img src="image/beegining of work/bow__row-icon.svg" alt="" />
           </div>

@@ -374,25 +374,25 @@ html {
         margin-left: 40px;
     }
     
-    &__ul {
-        margin-bottom: 15px;
-        display: none;
+    // &__ul {
+    //     margin-bottom: 15px;
+    //     display: none;
 
-        li{
-            &:hover{
-                color:#69696B;
-                text-decoration: underline;
-                cursor: pointer;
-            }
-        }
-    }
-    .ul--show {
-        margin-bottom: 15px;
-        display: block;
-    }
-    li{
-        margin-left: 60px;
-    }
+    //     li{
+    //         &:hover{
+    //             color:#69696B;
+    //             text-decoration: underline;
+    //             cursor: pointer;
+    //         }
+    //     }
+    // }
+    // .ul--show {
+    //     margin-bottom: 15px;
+    //     display: block;
+    // }
+    // li{
+    //     margin-left: 60px;
+    // }
 }
 //quiz
 .quiz-questions,

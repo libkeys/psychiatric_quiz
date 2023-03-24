@@ -6,8 +6,11 @@ import CreateClass from '../views/CreateClass.vue'
 import AddStudent from '../views/AddStudent.vue'
 import StudentSearch from '../views/StudentSearch.vue'
 import StudentPage from '../views/StudentPage.vue'
-import Data from '../views/StudentPage.vue'
+import Data from '../views/Data.vue'
 import ChoiceOfMethod from '../views/ChoiceOfMethod.vue'
+import ObservationTest from '../views/ObservationTest.vue'
+import SpeakingTest from '../views/SpeakingTest.vue'
+import ExperimentTest from '../views/ExperimentTest.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,38 +22,43 @@ const router = createRouter({
     },
     {
       path: '/beginning_of_work',
-      name: 'beginning-of-work',
       component: BeginningOfWork
     },
     {
       path: '/create_class',
-      name: 'create_class',
       component: CreateClass
     },
     {
       path: '/add_student',
-      name: '/add_student',
       component: AddStudent
     },
     {
       path: '/student_search',
-      name: '/student_search',
       component: StudentSearch
     },
     {
       path: '/student_page',
-      name: '/student_page',
       component: StudentPage
     },
     {
-      path: '/data',
-      name: '/data',
+      path: '/data_monitoring',
       component: Data
     },
     {
       path: '/choice_of_method',
-      name: '/choice_of_method',
       component: ChoiceOfMethod
+    },
+    {
+      path: '/observation_test',
+      component: ObservationTest
+    },
+    {
+      path: '/speaking_test',
+      component: SpeakingTest
+    },
+    {
+      path: '/experiment_test',
+      component: ExperimentTest
     }
     // {
     //   path: '/about',

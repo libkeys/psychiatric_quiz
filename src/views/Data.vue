@@ -13,16 +13,17 @@
         </div>
 
         <div class="main__two-button button btndate">
-          <div class="button__container button__container--blue">
-            <div
-              onclick="dateToChoiseMethod()"
-              id="datamonbtn"
-              class="button__text button__text--white"
-            >
-              Сохранить
+          <RouterLink to="../choice_of_method">
+            <div class="button__container button__container--blue">
+              <div
+                onclick="dateToChoiseMethod()"
+                id="datamonbtn"
+                class="button__text button__text--white"
+              >
+                Сохранить
+              </div>
             </div>
-          </div>
-
+          </RouterLink>
           <div
             onclick="bowToaddstudent()"
             class="button__container button__container--two-button"
