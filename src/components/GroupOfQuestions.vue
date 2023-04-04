@@ -6,7 +6,11 @@ export default {
     return {
     };
   },
-  methods: {},
+  methods: {
+    saveData(data, itemText){
+      this.$emit('saveRadioDataServer', data, itemText)
+    }
+  },
   components: {
     QuestionItem,
   },
@@ -20,6 +24,9 @@ export default {
     },
     items: {
         typeof: Array
+    },
+    references: {
+      type: Array
     }
   }
 };
@@ -31,6 +38,8 @@ export default {
       :title="title"
       :type="typeOfRadio"
       :items="items"
+      :references="references"
+      @save-radio-data-group="(data, itemText) => saveData(data, itemText)"
     />
   </div>
 </template>

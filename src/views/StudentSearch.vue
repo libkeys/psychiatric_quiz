@@ -75,7 +75,7 @@ export default {
 
         result.then((data) => {
           this.students = JSON.parse(data);
-          console.log(JSON.parse(data));
+          console.log(this.students[0].id);
         });
       } catch (error) {
         console.log(error + "fdsf");
@@ -110,28 +110,30 @@ export default {
       }
     },
     studentIdSave(id) {
-      let requestData = {
-        id: id
-      }
-      try {
-        let result = fetch("http://localhost:3000/save_id_student", {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestData),
-        }).then((data) => {
-          let answer = data.text();
-          return answer;
-        });
+      document.cookie = `studentId=${id}`;
+      this.$studentCurrentId = id;
+      // let requestData = {
+      //   id: id
+      // }
+      //   try {
+      //     let result = fetch("http://localhost:3000/save_id_student", {
+      //       method: "POST",
+      //       mode: "cors",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //       body: JSON.stringify(requestData),
+      //     }).then((data) => {
+      //       let answer = data.text();
+      //       return answer;
+      //     });
 
-        result.then((data) => {
-          console.log(data)
-        });
-      } catch (error) {
-        console.log(error);
-      }
+      //     result.then((data) => {
+      //       console.log(data)
+      //     });
+      //   } catch (error) {
+      //     console.log(error);
+      //   }
     },
   },
   created() {

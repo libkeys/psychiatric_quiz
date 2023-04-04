@@ -14,8 +14,8 @@ export default {
     type: {
       type: Number,
     },
-    reference: {
-      type: String,
+    references: {
+      type: Array,
     },
   },
   data() {
@@ -25,9 +25,37 @@ export default {
       scoped: false,
       showAddition: false,
       updateRadioValue: false,
+      showReference: false,
+      idArray: [],
+      itemToSave: ''
     };
   },
   methods: {
+    getQuestionsId() {
+      let requestData = {
+        type: this.type,
+      };
+      try {
+        let result = fetch("http://localhost:3000/get_questions_id", {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        }).then((data) => {
+          let answer = data.text();
+          return answer;
+        });
+
+        result.then((data) => {
+          this.idArray = data;
+          console.log(data);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
     toggleList() {
       this.showList = !this.showList;
       this.scoped = !this.scoped;
@@ -47,21 +75,33 @@ export default {
     toggleAddition() {
       this.showAddition = !this.showAddition;
     },
-    changeUpdateRadio(index) {
+    changeUpdateRadio(index,item) {
       this.updateRadioValue = true;
       this.indexToUpdate = index;
+      this.itemToSave = item
     },
-    saveRadioData(data) {
-      console.log(data);
+    saveRadioData(data, index) {
+      let idRadio = this.idArray[index - 1]; //don't need maybe
+      this.$emit("saveRadioDataGroup", data, this.itemToSave); 
       this.updateRadioValue = false;
     },
-    checkReference() {
-      if (this.reference != "") {
-        return true;
+    checkReference(index) {
+      if (this.references[0] != "") {
+        if (this.references[index] == "") {
+          return true;
+        } else {
+          return false;
+        }
       } else {
-        return false;
+        return true;
       }
     },
+    toggleReference() {
+      this.showReference = !this.showReference;
+    },
+  },
+  created() {
+    this.getQuestionsId()
   },
   components: {
     ObservationRadioButtons,
@@ -83,7 +123,11 @@ export default {
       />
       <p class="question-group__title" @click="toggleList">{{ title }}</p>
     </div>
-    <transition name="question-group__transition">
+    <transition
+      name="show-list"
+      enter-active-class="question-group__transition_enter"
+      leave-active-class="question-group__transition_leave"
+    >
       <div
         v-if="showList"
         class="question-group__list"
@@ -94,28 +138,40 @@ export default {
           v-for="(item, index) in items"
           :key="index"
         >
-          <p class="question-group__text-item" v-if="checkReference">
-            {{ item }}
+          <p class="question-group__text-item" v-if="checkReference(index)">
+            {{ item }} {{index}}
           </p>
-          <div class="question-group__text-item-wrapper" v-if="!checkReference">
-            <p class="question-group__text-item">
-              {{ item }}
-            </p>
-            <img
-              class="question-group__reference"
-              src="../assets/images/первый экран/header faq.svg"
-            />
+          <div class="question-group__extended" v-if="!checkReference(index)">
+            <div class="question-group__text-item-wrapper">
+              <p class="question-group__text-item">
+                {{ item }}
+              </p>
+              <img
+                @click="toggleReference"
+                v-if="!checkReference(index)"
+                class="question-group__reference"
+                src="../assets/images/первый экран/header faq.svg"
+              />
+            </div>
+            <div class="question-group__reference" v-if="showReference">
+              <p>{{ references[index] }}</p>
+            </div>
           </div>
           <div class="question-group__radio-buttons" v-if="checkFirstType()">
             <ObservationRadioButtons
               :indexCreated="index"
               :indexToUpdate="indexToUpdate"
               :updateRadioValue="updateRadioValue"
-              @send-radio-data="saveRadioData"
+              @send-radio-data="(data) => saveRadioData(data, index)"
             />
           </div>
           <div class="question-group__radio-buttons" v-if="checkSecondType()">
-            <TalkingRadioButtons />
+            <TalkingRadioButtons
+              :indexCreated="index"
+              :indexToUpdate="indexToUpdate"
+              :updateRadioValue="updateRadioValue"
+              @send-radio-data="saveRadioData"
+            />
           </div>
           <div class="question-group__radio-buttons" v-if="checkThirdType()">
             <ExperimentRadioButtons />
@@ -129,7 +185,7 @@ export default {
             </button>
             <button
               class="question-group__button-save btn btn-light"
-              @click="changeUpdateRadio(index)"
+              @click="changeUpdateRadio(index, item)"
             >
               Сохранить
             </button>
@@ -151,6 +207,7 @@ export default {
 <style lang="scss">
 .question-group {
   // margin: 10px 0px 40px 0px;
+  overflow: hidden;
   &__arrow {
     width: 25px;
     height: 25px;
@@ -174,21 +231,20 @@ export default {
     display: flex;
     align-items: center;
   }
-  &__list {
-    margin-top: -300px;
-    transition: 0.4s;
-    &_active {
-      margin-top: 0;
-      transition: 0.4s;
-    }
-  }
+  // &__list {
+  //   margin-top: -300px;
+  //   transition: 0.4s;
+  //   &_active {
+  //     margin-top: 0;
+  //     transition: 0.4s;
+  //   }
+  // }
   &_scoped {
     margin-bottom: 70px;
   }
   &__title {
     font-size: 22px;
-  }
-  &__transition {
+    z-index: 10;
   }
   &__item {
     margin-bottom: 35px;
@@ -200,11 +256,10 @@ export default {
     font-size: 20px;
     font-family: "Inter";
   }
-  &__text-item-wrapper{
+  &__text-item-wrapper {
     display: flex;
   }
-  &__reference{
-
+  &__reference {
   }
   &__buttons {
     margin-top: 10px;
@@ -227,6 +282,65 @@ export default {
       // height: 120px;
       font-size: 20px;
     }
+  }
+  &__transition {
+    // &_enter {
+    //   animation-name: show-top;
+    //   animation-duration: 1s;
+    // }
+    // &_leave {
+    //   animation-name: show-top reverse;
+    //   animation-duration: 1s;
+    // }
+  }
+  &__extended {
+  }
+  &__text-item-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    p {
+    }
+    img {
+      margin-top: -20px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+  }
+  &__reference {
+  }
+}
+
+// .show-list-enter-active,
+// .show-list-leave-active {
+//   transition: margin, all 1s ease;
+//   margin-left: 0;
+//   opacity: 1;
+// }
+// .show-list-enter-from,
+// .show-list-leave-to {
+//   margin-left: -1400px;
+//   opacity: 0;
+// }
+.show-list-enter-active {
+  animation: show-top 1s;
+}
+.show-list-leave-active {
+  animation: show-top 1s reverse;
+}
+.show-list-enter-from {
+}
+.show-list-leave-to {
+  // margin-top: 400px!important;
+}
+
+@keyframes show-top {
+  0% {
+    margin-top: -1400px;
+  }
+
+  100% {
+    margin-top: 00px;
   }
 }
 </style>

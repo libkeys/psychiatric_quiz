@@ -13,13 +13,29 @@ export default {
   },
   methods: {
     getDataStudent() {
+      function getCookie(name) {
+        let matches = document.cookie.match(
+          new RegExp(
+            "(?:^|; )" +
+              name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+              "=([^;]*)"
+          )
+        );
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+      }
+      let studentId = getCookie('studentId');
+      let requestData = {
+        studentId: studentId,
+      };
+      console.log(studentId);
       try {
         let result = fetch("http://localhost:3000/get_student_by_id", {
-          method: "GET",
+          method: "POST",
           mode: "cors",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify(requestData),
         }).then((data) => {
           let answer = data.text();
           return answer;
