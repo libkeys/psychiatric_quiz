@@ -2,6 +2,7 @@
 import ObservationRadioButtons from "./ObservationRadioButtons.vue";
 import TalkingRadioButtons from "./TalkingRadioButtons.vue";
 import ExperimentRadioButtons from "./ExperimentRadioButtons.vue";
+import AdditionComponent from "./Addition.vue";
 
 export default {
   props: {
@@ -25,9 +26,11 @@ export default {
       scoped: false,
       showAddition: false,
       updateRadioValue: false,
+      updateAddition: false,
       showReference: false,
       idArray: [],
-      itemToSave: ''
+      itemToSave: "",
+      addition: "",
     };
   },
   methods: {
@@ -75,14 +78,18 @@ export default {
     toggleAddition() {
       this.showAddition = !this.showAddition;
     },
-    changeUpdateRadio(index,item) {
+    //метод вызывается при нажатии на кнопку сохранить, item - текст вопроса, необходимо
+    //для того чтобы потом сохранить результат в базе данных
+    changeUpdateRadio(index, item) {
+      this.updateAddition = true;
       this.updateRadioValue = true;
       this.indexToUpdate = index;
-      this.itemToSave = item
+      this.itemToSave = item;
     },
     saveRadioData(data, index) {
       let idRadio = this.idArray[index - 1]; //don't need maybe
-      this.$emit("saveRadioDataGroup", data, this.itemToSave); 
+      console.log(this.addition)
+      this.$emit("saveRadioDataGroup", data, this.itemToSave, this.addition);
       this.updateRadioValue = false;
     },
     checkReference(index) {
@@ -99,14 +106,20 @@ export default {
     toggleReference() {
       this.showReference = !this.showReference;
     },
+    saveAddition(value) {
+      this.updateAddition = false;
+      console.log(value)
+      this.addition = value;
+    },
   },
   created() {
-    this.getQuestionsId()
+    this.getQuestionsId();
   },
   components: {
     ObservationRadioButtons,
     TalkingRadioButtons,
     ExperimentRadioButtons,
+    AdditionComponent,
   },
 };
 </script>
@@ -139,7 +152,7 @@ export default {
           :key="index"
         >
           <p class="question-group__text-item" v-if="checkReference(index)">
-            {{ item }} {{index}}
+            {{ item }} {{ index }}
           </p>
           <div class="question-group__extended" v-if="!checkReference(index)">
             <div class="question-group__text-item-wrapper">
@@ -190,14 +203,11 @@ export default {
               Сохранить
             </button>
           </div>
-          <div class="question-group__addition" v-if="showAddition">
-            <textarea
-              class="form-control"
-              rows="4"
-              v-bind="addition"
-              placeholder="примечание"
-            />
-          </div>
+          <AdditionComponent
+            v-if="showAddition"
+            @save-addition="(value) => saveAddition(value)"
+            :updateAddition="updateAddition"
+          />
         </div>
       </div>
     </transition>

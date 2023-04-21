@@ -64,12 +64,18 @@ export default {
   components: {
     ClassItem,
   },
+  props: {
+    showStudent: {
+      type: Boolean,
+    },
+  },
 };
 </script>
 
 
 <template>
-  <HeaderStandart />
+  <HeaderStandart :showStudent="showStudent" />
+
   <div class="main">
     <div class="container">
       <div class="title">
@@ -128,7 +134,7 @@ export default {
       </div>
 
       <div class="list-classes">
-        <p >Вы добавили...</p>
+        <p>Вы добавили...</p>
         <ul>
           <ClassItem
             v-for="classItem in addedClasses"

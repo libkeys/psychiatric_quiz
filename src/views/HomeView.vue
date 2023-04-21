@@ -1,5 +1,16 @@
+<script>
+export default({
+  props: {
+    showStudent: {
+      type: Boolean
+    }
+  }
+})
+</script>
+
+
 <template>
-  <HeaderStandart />
+  <HeaderStandart :showStudent="showStudent"/>
 
   <div class="main">
     <div class="container">
@@ -43,3 +54,12 @@
   </div>
   <FooterStandart />
 </template>
+
+<style lang="scss">
+  .main{
+    // display: flex;
+    // align-items: center;
+    padding-top: 100px;
+    padding-block: 100px;
+  }
+</style>

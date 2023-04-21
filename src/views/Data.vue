@@ -28,8 +28,8 @@ export default {
         );
         return matches ? decodeURIComponent(matches[1]) : undefined;
       }
-      let datePoll = getCookie('datePoll')
-      let studentId = getCookie('studentId')
+      let datePoll = getCookie("datePoll");
+      let studentId = getCookie("studentId");
       let requestData = {
         date: datePoll,
         studentId: studentId,
@@ -56,13 +56,19 @@ export default {
         console.log(error);
       }
     },
+    props: {
+      showStudent: {
+        type: Boolean,
+      },
+    },
   },
 };
 </script>
 
 
 <template>
-  <HeaderStandart />
+  <HeaderStandart :showStudent="showStudent" />
+
   <div class="main">
     <div class="container">
       <div class="title">

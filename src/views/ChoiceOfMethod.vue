@@ -1,5 +1,17 @@
+<script>
+export default({
+  props: {
+    showStudent: {
+      type: Boolean,
+    },
+  },
+})
+</script>
+
+
 <template>
-  <HeaderStandart />
+  <HeaderStandart :showStudent="showStudent" />
+
   <div class="main">
     <div class="container">
       <div class="title">

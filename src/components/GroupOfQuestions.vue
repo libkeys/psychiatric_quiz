@@ -7,8 +7,8 @@ export default {
     };
   },
   methods: {
-    saveData(data, itemText){
-      this.$emit('saveRadioDataServer', data, itemText)
+    saveData(data, itemText, addition){
+      this.$emit('saveRadioDataServer', data, itemText, addition)
     }
   },
   components: {
@@ -39,7 +39,7 @@ export default {
       :type="typeOfRadio"
       :items="items"
       :references="references"
-      @save-radio-data-group="(data, itemText) => saveData(data, itemText)"
+      @save-radio-data-group="(data, itemText, addition) => saveData(data, itemText, addition)"
     />
   </div>
 </template>

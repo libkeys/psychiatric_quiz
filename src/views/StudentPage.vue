@@ -9,6 +9,7 @@ export default {
       studentClass: "",
       studentClassNumber: 0,
       studentClassLetter: "",
+      studentId : 0
     };
   },
   methods: {
@@ -24,6 +25,8 @@ export default {
         return matches ? decodeURIComponent(matches[1]) : undefined;
       }
       let studentId = getCookie('studentId');
+      //присваивание глобальной переменной значение из куки чтобы потом использовать при обновлении данных
+      this.studentId = studentId
       let requestData = {
         studentId: studentId,
       };
@@ -70,6 +73,7 @@ export default {
         studentBirthDate: birthDate,
         studentClassNumber: this.studentClassNumber,
         studentClassLetter: this.studentClassLetter,
+        studentId: this.studentId
       };
 
       try {
@@ -96,13 +100,18 @@ export default {
   },
   created() {
     this.getDataStudent();
+  },  props: {
+    showStudent: {
+      type: Boolean,
+    },
   },
 };
 </script>
 
 
 <template>
-  <HeaderStandart />
+  <HeaderStandart :showStudent="showStudent" />
+
   <div class="main">
     <div class="container">
       <div class="title">

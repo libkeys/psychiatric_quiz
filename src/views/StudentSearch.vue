@@ -78,7 +78,7 @@ export default {
           console.log(this.students[0].id);
         });
       } catch (error) {
-        console.log(error + "fdsf");
+        console.log(error);
       }
     },
     deleteStudent(studentID) {
@@ -111,7 +111,15 @@ export default {
     },
     studentIdSave(id) {
       document.cookie = `studentId=${id}`;
-      this.$studentCurrentId = id;
+      // запись значений выбранного ученика в куки для избежания дополнительного запроса к БД
+      let currentStudent = this.students.find((element) => element.id == id);
+      document.cookie = `studentName=${currentStudent.studentName}`;
+      document.cookie = `studentName=${currentStudent.studentSurname}`;
+      document.cookie = `studentName=${currentStudent.studentLastname}`;
+      let classStudent =
+        currentStudent.classNumber + currentStudent.classLetter;
+      document.cookie = `studentClassFullName=${classStudent}`;
+      document.cookie = `studentBirthDate=${currentStudent.studentBirthDate}`;
       // let requestData = {
       //   id: id
       // }
@@ -139,12 +147,18 @@ export default {
   created() {
     this.getClasses();
   },
+  props: {
+    showStudent: {
+      type: Boolean,
+    },
+  },
 };
 </script>
 
 
 <template>
-  <HeaderStandart />
+  <HeaderStandart :showStudent="showStudent" />
+
   <div class="main">
     <div class="container">
       <div class="title">

@@ -91,7 +91,6 @@ app.post('/delete_class', function (request, response) {
       )
     })
     result.then(data => {
-      console.log(data.result)
       response.end(JSON.stringify(data.result))
     }).catch(error => {
       console.log(error)
@@ -200,7 +199,6 @@ app.post('/add_student', function (request, response) {
         }
       }).then(data => {
         let dataClass = data.result[0]
-        console.log(dataClass)
         try {
           let resultRequest = new Promise(function (resolve, reject) {
             connection.query(`update students set classLetter = '${dataClass.classLetter}', classNumber = ${dataClass.classNumber} where
@@ -270,37 +268,6 @@ app.post('/get_student', function (request, response) {
     requestSQL.string += `${requestSQL.surname || requestSQL.lastname || requestSQL.class ? 'and' : 'where'} studentName like '%${requestData.studentName}%' `
   }
   requestSQL.string += ';';
-  // if (requestData.studentName !== '') {
-  //   requestSQL.name = true;
-  // }
-  // if (requestData.studentSurname !== '') {
-  //   requestSQL.surname = true;
-  //   requestSQL += `and studentSurname
-  //   like '${requestData.studentSurname}' `
-  // }
-  // if (requestData.studentLastname !== '') {
-  //   requestSQL.lastname = true;
-  //   requestSQL += `and studentLastname like '${requestData.studentLastname}' `
-  // }
-  // if (requestData.studentClass !== 'Выберете класс') {
-  //   requestSQL.class = true;
-  //   if (requestData.studentName !== '' && requestData.studentSurname !== '' && requestData.studentLastname !== '') {
-  //     requestSQL += `and studentClass like '${requestData.studentClass}';`
-  //   }
-  //   else {
-  //     requestSQL += `studentClass like '${requestData.studentClass}';`
-  //   }
-  // }
-  // if (requestSQL.name || requestSQL.surname || requestSQL.lastname || requestSQL.class) {
-  //   requestSQL += ` where `
-  //   if (requestSQL.name) {
-  //     requestSQL += `studentName like '${requestData.studentName}' `
-  //   }
-  // }
-  // else {
-  //   requestSQL += ';'
-  // }
-  // console.log(requestSQL)
   try {
     let result = new Promise(function (resolve, reject) {
       connection.query(requestSQL.string,
@@ -334,31 +301,6 @@ app.post('/get_student', function (request, response) {
             resultCLasses.then(data => {
               response.send(JSON.stringify(answer.result))
             })
-            // const promise = new Promise((resolve, reject) => {
-            //   const query = `SELECT id, classNumber, classLetter FROM classes`;
-            //   connection.query(query, (error, results) => {
-            //     if (error) {
-            //       reject(error);
-            //     } else {
-            //       const modifiedResults = results.map((result) => {
-            //         return {
-            //           ...result,
-            //           studentClass: result.classNumber + result.classLetter,
-            //         };
-            //       });
-            //       resolve(modifiedResults);
-            //     }
-            //   });
-            //   // Update each student's class with class name and letter
-
-            // });
-            // promise
-            //   .then((results) => {
-            //     response.send(JSON.stringify(results))
-            //   })
-            //   .catch((err) => {
-            //     console.error(err);
-            //   });
             resolve(answer);
           }
         })
@@ -493,7 +435,7 @@ app.post('/get_student_by_id', function (request, response) {
 // Route to handle the incoming request
 app.post("/update_student", (req, res) => {
   // Get the data from the request body
-  const { studentName, studentSurname, studentLastname, studentBirthDate, studentClassNumber, studentClassLetter } = req.body;
+  const { studentName, studentSurname, studentLastname, studentBirthDate, studentClassNumber, studentClassLetter, studentId } = req.body;
 
   // Construct the SQL query to update the student's record in the database
   function updateStudent() {
@@ -517,7 +459,6 @@ app.post("/update_student", (req, res) => {
     resultGettingClass.then(data => {
       let idClass = data.result[0].id
       const query = `UPDATE students SET studentClass = ${idClass}, studentName = '${studentName}', studentSurname = '${studentSurname}', studentLastname = '${studentLastname}', studentBirthDate = '${studentBirthDate}', classNumber = ${studentClassNumber}, classLetter = '${studentClassLetter}' WHERE id = ${studentId}`;
-      console.log(query)
       // let queryUpdate = new Promise((resolve, reject) => {
       // Execute the SQL query
       connection.query(query, (error, results) => {
@@ -574,7 +515,6 @@ app.post("/update_student", (req, res) => {
 
 app.post('/choose_date', (request, response) => {
   let requestData = request.body
-  console.log(requestData)
   let result = new Promise((resolve, reject) => {
     connection.query(`select * from polls where date =${requestData.date}`, function (err, results, fields) {
       answer = {}
@@ -592,10 +532,8 @@ app.post('/choose_date', (request, response) => {
   }).catch(err => console.log(err))
 
   result.then(data => {
-    console.log(data)
     if (data.result = []) {
       makeDateCreateRequest().then(data => {
-        console.log(data)
         response.end(JSON.stringify(data))
       }).catch(err => console.log(err))
     }
@@ -625,16 +563,142 @@ app.post('/choose_date', (request, response) => {
 
 app.post('/get_questions_id', (request, response) => {
   let requestData = request.body
-  console.log(requestData)
 })
 
 app.post('/save_radio', (request, response) => {
   let requestData = request.body
   console.log(requestData)
-  let result = new Promise((resolve, reject) => {
-    connection.query(`INSERT INTO classes(classNumber, classLetter) VALUES (${studentClassNumber}, '${studentClassLetter}');`, function (err, results, fields) {
 
+  let resultQuestions = new Promise((resolve, reject) => {
+    connection.query(`select * from questions where text like ('${requestData.itemText.slice(0, 50)}%');`, function (err, results, fields) {
+      answer = {}
+      if (err !== null) {
+        answer.result = err;
+        answer.message = 'something went wrong'
+        reject(answer);
+      }
+      else {
+        answer.result = results;
+        answer.message = 'everything is fine'
+        resolve(answer);
+      }
     })
+  }).catch(err => console.log(err))
+
+  //получение id теста (Poll) для последующего запроса на создание записи answer
+  let resultPoll = resultQuestions.then(dataQuestion => {
+    console.log(requestData.addition)
+    return new Promise((resolve, reject) => {
+      connection.query(`select * from polls where date = '${requestData.datePoll}';`, function (err, results, fields) {
+        answer = {}
+        if (err !== null) {
+          answer.result = err;
+          answer.message = 'something went wrong'
+          reject(answer);
+        }
+        else {
+          answer.result = results;
+          answer.dataQuestion = dataQuestion.result
+          answer.message = 'everything is fine'
+          resolve(answer);
+        }
+      })
+    })
+  }).catch(err => console.log(err))
+
+  //проверка на уже существующий answer
+  let resultCheck = resultPoll.then(data => {
+    let idPoll = data.result[0].idPoll
+    let idQuestion = data.dataQuestion[0].idQuestion
+    let idMethod = data.dataQuestion[0].idMethod
+    let answerPoints = requestData.data
+    let addition = requestData.addition
+    return new Promise((resolve, reject) => {
+      connection.query(`select * from answers where idPoll = ${idPoll} and idQuestion = ${idQuestion}`, function (err, results, fields) {
+        answer = {}
+        if (err !== null) {
+          answer.result = err;
+          answer.message = 'something went wrong'
+          reject(answer);
+        }
+        else {
+          if (results[0] == undefined) {
+            answer.resultOfCheck = false
+          }
+          else {
+            answer.resultOfCheck = true;
+          }
+          // переопределение переменных для дальнейшего использования в insert запросе
+          answer.idPoll = idPoll
+          answer.idQuestion = idQuestion
+          answer.idMethod = idMethod
+          answer.answerPoints = answerPoints
+          answer.addition = addition
+          answer.message = 'everything is fine'
+          resolve(answer);
+        }
+      })
+    })
+  }).catch(err => console.log(err))
+
+  let resultInsertAnswer = resultCheck.then(data => {
+    if (!data.resultOfCheck) {
+      return new Promise((resolve, reject) => {
+        let querySql = `insert into answers(idPoll, answerPoints, idQuestion, idMethod) values(
+          ${data.idPoll}, ${data.answerPoints}, ${data.idQuestion}, ${data.idMethod}
+        );`
+        let additionCheck = data.addition == undefined
+        let querySqlWithAddition = ''
+        if (!additionCheck) {
+           querySqlWithAddition = `insert into answers(idPoll, answerPoints, addition ,idQuestion, idMethod) values(
+            ${data.idPoll}, ${data.answerPoints}, '${data.addition}',${data.idQuestion}, ${data.idMethod}
+          );`
+        }
+        connection.query(additionCheck ? querySql : querySqlWithAddition, function (err, results, fields) {
+          answer = {}
+          if (err !== null) {
+            answer.result = err;
+            answer.message = 'something went wrong'
+            reject(answer);
+          }
+          else {
+            answer.result = results;
+            answer.message = 'everything is fine'
+            resolve(answer);
+          }
+        })
+      })
+    }
+    else {
+      return new Promise((resolve, reject) => {
+        let querySql = `update answers set answerPoints = ${data.answerPoints}
+        where idPoll = ${data.idPoll} and idQuestion = ${data.idQuestion};`
+        let additionCheck = data.addition == undefined
+        let querySqlWithAddition = ''
+        if (!additionCheck) {
+          querySqlWithAddition = `update answers set answerPoints = ${data.answerPoints}, addition = '${data.addition}'
+          where idPoll = ${data.idPoll} and idQuestion = ${data.idQuestion};`
+        }
+        connection.query(additionCheck ? querySql : querySqlWithAddition, function (err, results, fields) {
+          answer = {}
+          if (err !== null) {
+            answer.result = err;
+            answer.message = 'something went wrong'
+            reject(answer);
+          }
+          else {
+            answer.result = results;
+            answer.message = 'everything is fine'
+            resolve(answer);
+          }
+        })
+      })
+    }
+
+  }).catch(err => console.log(err))
+
+  resultInsertAnswer.then(dataFinal => {
+    console.log(dataFinal)
   })
 })
 

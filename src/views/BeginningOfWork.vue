@@ -1,17 +1,17 @@
 <script>
-// import HeaderStandart from '../components/Header.vue';
-
-// export default{
-//     name:'BeginningOfWork',
-//     components:{
-//         HeaderStandart
-//     }
-// }
+export default({
+  props: {
+    showStudent: {
+      type: Boolean
+    }
+  }
+})
 </script>
 
-<template>
-  <HeaderStandart />
 
+<template>
+  <HeaderStandart :showStudent="showStudent"/>
+  
   <div class="main">
     <div class="container">
       <div class="title">

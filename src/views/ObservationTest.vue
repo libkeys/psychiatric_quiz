@@ -6,13 +6,28 @@ export default {
     GroupOfQuestions,
   },
   methods: {
-    saveRadio(data, itemText) {
-      console.log(itemText)
+    saveRadio(data, itemText, addition) {
       // console.log(data + ' ' + id)
+      function getCookie(name) {
+        let matches = document.cookie.match(
+          new RegExp(
+            "(?:^|; )" +
+              name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+              "=([^;]*)"
+          )
+        );
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+      }
+      let datePoll = getCookie("datePoll");
       let requestData = {
         data: data,
-        itemText: itemText
+        itemText: itemText,
+        datePoll: datePoll,
+      };
+      if (addition != undefined) {
+        requestData.addition = addition;
       }
+      console.log(addition);
       try {
         let result = fetch("http://localhost:3000/save_radio", {
           method: "POST",
@@ -219,12 +234,18 @@ export default {
       ],
     };
   },
+  props: {
+    showStudent: {
+      type: Boolean,
+    },
+  },
 };
 </script>
 
 
 <template>
-  <HeaderStandart />
+  <HeaderStandart :showStudent="showStudent" />
+
   <div class="main">
     <div class="container">
       <div class="title">
@@ -242,7 +263,9 @@ export default {
             :title="content[0].title"
             :items="content[0].items"
             :references="content[0].references"
-            @save-radio-data-server="(data, itemText) => saveRadio(data, itemText)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
 
           <GroupOfQuestions
@@ -250,7 +273,9 @@ export default {
             :title="content[1].title"
             :items="content[1].items"
             :references="content[1].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
 
           <GroupOfQuestions
@@ -258,7 +283,9 @@ export default {
             :title="content[2].title"
             :items="content[2].items"
             :references="content[2].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
 
           <GroupOfQuestions
@@ -266,7 +293,9 @@ export default {
             :title="content[3].title"
             :items="content[3].items"
             :references="content[3].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
 
           <GroupOfQuestions
@@ -274,7 +303,9 @@ export default {
             :title="content[4].title"
             :items="content[4].items"
             :references="content[4].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
 
           <GroupOfQuestions
@@ -282,7 +313,9 @@ export default {
             :title="content[5].title"
             :items="content[5].items"
             :references="content[5].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
 
           <GroupOfQuestions
@@ -290,7 +323,9 @@ export default {
             :title="content[6].title"
             :items="content[6].items"
             :references="content[6].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
           <div class="list__title">
             <p>Коммуникативные базовые учебные действия</p>
@@ -300,7 +335,9 @@ export default {
             :title="content[7].title"
             :items="content[7].items"
             :references="content[7].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
 
           <GroupOfQuestions
@@ -308,7 +345,9 @@ export default {
             :title="content[8].title"
             :items="content[8].items"
             :references="content[8].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
 
           <GroupOfQuestions
@@ -316,7 +355,9 @@ export default {
             :title="content[9].title"
             :items="content[9].items"
             :references="content[9].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
 
           <GroupOfQuestions
@@ -324,7 +365,9 @@ export default {
             :title="content[10].title"
             :items="content[10].items"
             :references="content[10].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
 
           <GroupOfQuestions
@@ -332,7 +375,9 @@ export default {
             :title="content[11].title"
             :items="content[11].items"
             :references="content[11].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
 
           <GroupOfQuestions
@@ -340,7 +385,9 @@ export default {
             :title="content[12].title"
             :items="content[12].items"
             :references="content[12].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
           <div class="list__title">
             <p>Регулятивные базовые учебные действия</p>
@@ -350,7 +397,9 @@ export default {
             :title="content[13].title"
             :items="content[13].items"
             :references="content[13].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
 
           <GroupOfQuestions
@@ -358,7 +407,9 @@ export default {
             :title="content[14].title"
             :items="content[14].items"
             :references="content[14].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
           <div class="list__title">
             <p>Познавательные базовые учебные действия</p>
@@ -368,7 +419,9 @@ export default {
             :title="content[15].title"
             :items="content[15].items"
             :references="content[15].references"
-            @save-radio-data-server="(data) => saveRadio(data)"
+            @save-radio-data-server="
+              (data, itemText, addition) => saveRadio(data, itemText, addition)
+            "
           />
         </div>
       </div>

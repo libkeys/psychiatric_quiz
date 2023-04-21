@@ -18,47 +18,80 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      props: {
+        showStudent: false
+      }
     },
     {
       path: '/beginning_of_work',
-      component: BeginningOfWork
+      component: BeginningOfWork,
+      props: {
+        showStudent: false
+      }
     },
     {
       path: '/create_class',
-      component: CreateClass
+      component: CreateClass,
+      props: {
+        showStudent: false
+      }
     },
     {
       path: '/add_student',
-      component: AddStudent
+      component: AddStudent,
+      props: {
+        showStudent: false
+      }
     },
     {
       path: '/student_search',
-      component: StudentSearch
+      component: StudentSearch,
+      props: {
+        showStudent: false
+      }
     },
     {
       path: '/student_page',
-      component: StudentPage
+      component: StudentPage,
+      props: {
+        showStudent: true
+      }
     },
     {
       path: '/data_monitoring',
-      component: Data
+      component: Data,
+      props: {
+        showStudent: true
+      }
     },
     {
       path: '/choice_of_method',
-      component: ChoiceOfMethod
+      component: ChoiceOfMethod,
+      props: {
+        showStudent: true
+      }
     },
     {
       path: '/observation_test',
-      component: ObservationTest
+      component: ObservationTest,
+      props: {
+        showStudent: true
+      }
     },
     {
       path: '/speaking_test',
-      component: SpeakingTest
+      component: SpeakingTest,
+      props: {
+        showStudent: true
+      }
     },
     {
       path: '/experiment_test',
-      component: ExperimentTest
+      component: ExperimentTest,
+      props: {
+        showStudent: true
+      }
     }
     // {
     //   path: '/about',
