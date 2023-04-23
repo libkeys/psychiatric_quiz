@@ -16,12 +16,20 @@ app.get('/', cors(), (req, res) => {
   res.send('Hello, world!');
 });
 
+// sometimes works bad and strange, there are just pending statuses on requests
 const connection = mysql.createConnection({
   host: 'sql7.freemysqlhosting.net',
   user: 'sql7610462',
   database: 'sql7610462',
   password: 'W83pDjZ54F'
 });
+
+// const connection = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'root',
+//   database: '*',
+//   password: '4248SQL*'
+// });
 
 connection.connect(function (err) {
   if (err) {
@@ -402,10 +410,10 @@ app.get('/all_students', function (request, response) {
 
 app.post('/get_student_by_id', function (request, response) {
   let studentId = request.body.studentId
-  console.log(request.body)
+  // console.log(request.body)
   let requestSQL = `select * from students where id = ${studentId}`
   try {
-    let result = new Promise(function (resolve, reject) {
+    let resultStudentData = new Promise(function (resolve, reject) {
       connection.query(requestSQL,
         function (err, results, fields) {
           // console.log(results);
@@ -419,11 +427,111 @@ app.post('/get_student_by_id', function (request, response) {
           else {
             answer.result = results;
             answer.message = 'everything is fine'
-            console.log(answer.result)
-            response.end(JSON.stringify(answer.result))
+            // console.log(answer.result)
             resolve(answer);
           }
         })
+    })
+
+    resultStudentData.then(answer => {
+      let resultPollsStudent = new Promise(function (resolve, reject) {
+        let answerPolls = {}
+        answerPolls.resultStudent = answer.result
+        let requestPollsSQL = `select * from polls where idStudent = ${studentId}`
+        connection.query(requestPollsSQL,
+          function (err, results, fields) {
+            // console.log(results);
+            if (err !== null) {
+              answerPolls.result = err;
+              answerPolls.message = 'something went wrong'
+              console.log(err)
+              reject(answerPolls);
+            }
+            else {
+              answerPolls.resultPolls = results;
+              answerPolls.message = 'everything is fine'
+
+              function formatDate(dateString) {
+                const date = new Date(dateString);
+                const isoString = date.toISOString();
+                const parts = isoString.split('T');
+                const dateComponent = parts[0];
+                return dateComponent;
+              }
+              answerPolls.resultPolls.forEach((el, index) => {
+                // console.log(index, ' ', el)s
+                answerPolls.resultPolls[index].date = formatDate(el.date)
+              })
+              answerPolls.resultPolls.sort((a, b) => a - b)
+              let lengthPolls = answerPolls.resultPolls.length
+              answerPolls.resultPolls = answerPolls.resultPolls[lengthPolls - 1]
+              // console.log(answerPolls)
+              resolve(answerPolls);
+            }
+          })
+      }).catch(err => console.log(err))
+
+      let resultAnswers = resultPollsStudent.then(answerPolls => {
+        // console.log(answerPolls)
+        if (answerPolls.resultPolls == undefined) {
+          return
+        }
+        return new Promise(function (resolve, reject) {
+          let studentAnswers = answerPolls
+          let requestPollsSQL = `select * from answers where idPoll = ${answerPolls.resultPolls.idPoll};`
+          connection.query(requestPollsSQL,
+            function (err, results, fields) {
+              // console.log(results);
+              if (err !== null) {
+                studentAnswers.result = err;
+                studentAnswers.message = 'something went wrong'
+                console.log(err)
+                reject(studentAnswers);
+              }
+              else {
+                studentAnswers.resultAnswers = results;
+                studentAnswers.message = 'everything is fine'
+
+                // console.log(studentAnswers)
+                resolve(studentAnswers);
+              }
+            })
+        }).catch(err => console.log(err))
+      })
+
+      let resultAddQuestions = resultAnswers.then(studentAnswers => {
+        if (studentAnswers == undefined) {
+          return
+        }
+        return new Promise(function (resolve, reject) {
+          let studentAnswersUpdated = studentAnswers
+          studentAnswersUpdated.resultAnswers.forEach((el, index) => {
+            let requestPollsSQL = `select text from questions where idQuestion = ${el.idQuestion};`
+            connection.query(requestPollsSQL,
+              function (err, results, fields) {
+                // console.log(results);
+                if (err !== null) {
+                  studentAnswersUpdated.result = err;
+                  studentAnswersUpdated.message = 'something went wrong'
+                  console.log(err)
+                  reject(studentAnswersUpdated);
+                }
+                else {
+                  studentAnswersUpdated.resultAnswers[index].text = results[0].text;
+                  // console.log(results[0])
+                  // console.log(studentAnswersUpdated)
+                }
+              })
+          })
+          resolve(studentAnswersUpdated)
+        }).catch(err => console.log(err))
+      })
+
+      resultAddQuestions.then(result => {
+        console.log(result)
+        response.end(JSON.stringify(result))
+      })
+
     })
   }
 
@@ -650,7 +758,7 @@ app.post('/save_radio', (request, response) => {
         let additionCheck = data.addition == undefined
         let querySqlWithAddition = ''
         if (!additionCheck) {
-           querySqlWithAddition = `insert into answers(idPoll, answerPoints, addition ,idQuestion, idMethod) values(
+          querySqlWithAddition = `insert into answers(idPoll, answerPoints, addition ,idQuestion, idMethod) values(
             ${data.idPoll}, ${data.answerPoints}, '${data.addition}',${data.idQuestion}, ${data.idMethod}
           );`
         }

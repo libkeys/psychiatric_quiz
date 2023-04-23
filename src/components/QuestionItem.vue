@@ -152,7 +152,7 @@ export default {
           :key="index"
         >
           <p class="question-group__text-item" v-if="checkReference(index)">
-            {{ item }} {{ index }}
+            {{ item }} 
           </p>
           <div class="question-group__extended" v-if="!checkReference(index)">
             <div class="question-group__text-item-wrapper">
