@@ -2,7 +2,7 @@
 export default {
   data() {
     return {
-      picked: 0,
+      picked: this.points,
     };
   },
   methods: {
@@ -11,6 +11,9 @@ export default {
     },
   },
   props: {
+    points: {
+      type: Number
+    },
     updateRadioValue: {
       type: Boolean,
     },

@@ -11,6 +11,8 @@ import ChoiceOfMethod from '../views/ChoiceOfMethod.vue'
 import ObservationTest from '../views/ObservationTest.vue'
 import SpeakingTest from '../views/SpeakingTest.vue'
 import ExperimentTest from '../views/ExperimentTest.vue'
+import Authorization from '../views/Authorization.vue'
+import Account from '../views/Account.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -91,6 +93,20 @@ const router = createRouter({
       component: ExperimentTest,
       props: {
         showStudent: true
+      }
+    },
+    {
+      path: '/authorisation',
+      component: Authorization,
+      props: {
+        showStudent: false
+      }
+    },
+    {
+      path: '/account',
+      component: Account,
+      props: {
+        showStudent: false
       }
     }
     // {

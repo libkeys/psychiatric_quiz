@@ -6,6 +6,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const mysql = require('mysql2');
+const { use } = require('browser-sync');
+const { rejects } = require('assert');
 
 app.use(express.static(__dirname + '/public'))
 app.use(express.urlencoded({ extended: false }));
@@ -19,9 +21,9 @@ app.get('/', cors(), (req, res) => {
 // sometimes works bad and strange, there are just pending statuses on requests
 const connection = mysql.createConnection({
   host: 'sql7.freemysqlhosting.net',
-  user: 'sql7610462',
-  database: 'sql7610462',
-  password: 'W83pDjZ54F'
+  user: 'sql7616824',
+  database: 'sql7616824',
+  password: 'yvAMi2irkA'
 });
 
 // const connection = mysql.createConnection({
@@ -51,9 +53,11 @@ app.use((req, res, next) => {
 
 app.post('/add_class', function (request, response) {
   let requestData = request.body;
+  console.log(requestData)
+  let sqlIdUserRequest = `select * from users where login = '${requestData.login}'`
   try {
     let result = new Promise(function (resolve, reject) {
-      connection.query(`INSERT INTO classes(classNumber, classLetter) VALUES (${requestData.classNumber}, '${requestData.classLetter}');`, function (err, results, fields) {
+      connection.query(sqlIdUserRequest, function (err, results, fields) {
         // console.log(results);
         answer = {}
         if (err !== null) {
@@ -67,6 +71,36 @@ app.post('/add_class', function (request, response) {
           resolve(answer);
         }
       })
+    }).catch(err => console.log(err))
+
+    result.then(data => {
+      let idUser = data.result[0].idUser
+      let sqlRequest = `INSERT INTO classes(classNumber, classLetter, userId) VALUES (${requestData.classNumber}, '${requestData.classLetter}', ${idUser});`
+      try {
+        let resultInsert = new Promise(function (resolve, reject) {
+          connection.query(sqlRequest, function (err, results, fields) {
+            // console.log(results);
+            answer = {}
+            if (err !== null) {
+              answer.result = err;
+              answer.message = 'something went wrong'
+              reject(answer);
+            }
+            else {
+              answer.result = results;
+              answer.message = 'everything is fine'
+              resolve(answer);
+            }
+          })
+        }).catch(err => console.log(err))
+
+        resultInsert.then(answer => {
+          console.log(answer.message)
+        })
+      }
+      catch (error) {
+        // console.log(error)
+      }
     })
 
     // result.then(data => data.text()).then(data => console.log(data))
@@ -74,6 +108,8 @@ app.post('/add_class', function (request, response) {
   catch (error) {
     // console.log(error)
   }
+
+
   response.end(JSON.stringify('ok'))
 })
 
@@ -110,11 +146,13 @@ app.post('/delete_class', function (request, response) {
   }
 })
 
-app.get('/get_classes', function (request, response) {
-  let requestData = request.body;
+app.post('/get_classes', function (request, response) {
+  let user = request.body.login;
   try {
+    let sqlRequest = `select classes.id, classes.classNumber, classes.classLetter from classes, 
+    users where users.login = '${user}' and classes.userId = users.idUser;`
     let result = new Promise(function (resolve, reject) {
-      connection.query(`SELECT * FROM classes;`,
+      connection.query(sqlRequest,
         function (err, results, fields) {
           // console.log(results);
           answer = {}
@@ -132,6 +170,7 @@ app.get('/get_classes', function (request, response) {
       )
     })
     result.then(data => {
+      console.log(user)
       response.end(JSON.stringify(data.result))
     })
     // result.then(data => data.text()).then(data => console.log(data))
@@ -353,6 +392,7 @@ app.post('/delete_student', function (request, response) {
 })
 
 app.get('/all_students', function (request, response) {
+  console.log('attemtp to send users list')
   let requestData = request.body;
   try {
     let result = new Promise(function (resolve, reject) {
@@ -427,6 +467,7 @@ app.post('/get_student_by_id', function (request, response) {
           else {
             answer.result = results;
             answer.message = 'everything is fine'
+            // console.log(requestSQL)
             // console.log(answer.result)
             resolve(answer);
           }
@@ -452,20 +493,28 @@ app.post('/get_student_by_id', function (request, response) {
               answerPolls.message = 'everything is fine'
 
               function formatDate(dateString) {
-                const date = new Date(dateString);
+                let date = new Date(dateString);
                 const isoString = date.toISOString();
-                const parts = isoString.split('T');
-                const dateComponent = parts[0];
+
+                let dateComponent = isoString;
+                dateComponent = dateComponent.slice(0, -1) + '0Z';
+                date = new Date(dateComponent);
+                date = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+                date = date.toISOString();
+                const parts = date.split('T');
+
+                date = parts[0];
                 return dateComponent;
               }
               answerPolls.resultPolls.forEach((el, index) => {
-                // console.log(index, ' ', el)s
                 answerPolls.resultPolls[index].date = formatDate(el.date)
+                console.log()
               })
+
               answerPolls.resultPolls.sort((a, b) => a - b)
               let lengthPolls = answerPolls.resultPolls.length
               answerPolls.resultPolls = answerPolls.resultPolls[lengthPolls - 1]
-              // console.log(answerPolls)
+              console.log(answerPolls)
               resolve(answerPolls);
             }
           })
@@ -473,11 +522,13 @@ app.post('/get_student_by_id', function (request, response) {
 
       let resultAnswers = resultPollsStudent.then(answerPolls => {
         // console.log(answerPolls)
+        let studentAnswers = answerPolls
         if (answerPolls.resultPolls == undefined) {
-          return
+          return studentAnswers
         }
         return new Promise(function (resolve, reject) {
           let studentAnswers = answerPolls
+
           let requestPollsSQL = `select * from answers where idPoll = ${answerPolls.resultPolls.idPoll};`
           connection.query(requestPollsSQL,
             function (err, results, fields) {
@@ -491,8 +542,6 @@ app.post('/get_student_by_id', function (request, response) {
               else {
                 studentAnswers.resultAnswers = results;
                 studentAnswers.message = 'everything is fine'
-
-                // console.log(studentAnswers)
                 resolve(studentAnswers);
               }
             })
@@ -500,8 +549,8 @@ app.post('/get_student_by_id', function (request, response) {
       })
 
       let resultAddQuestions = resultAnswers.then(studentAnswers => {
-        if (studentAnswers == undefined) {
-          return
+        if (studentAnswers.resultAnswers == undefined) {
+          return studentAnswers
         }
         return new Promise(function (resolve, reject) {
           let studentAnswersUpdated = studentAnswers
@@ -528,7 +577,7 @@ app.post('/get_student_by_id', function (request, response) {
       })
 
       resultAddQuestions.then(result => {
-        console.log(result)
+        // console.log(result)
         response.end(JSON.stringify(result))
       })
 
@@ -622,9 +671,10 @@ app.post("/update_student", (req, res) => {
 });
 
 app.post('/choose_date', (request, response) => {
+  console.log('choose date')
   let requestData = request.body
   let result = new Promise((resolve, reject) => {
-    connection.query(`select * from polls where date =${requestData.date}`, function (err, results, fields) {
+    connection.query(`select * from polls where date ='${requestData.date}'`, function (err, results, fields) {
       answer = {}
       if (err !== null) {
         answer.result = err;
@@ -640,13 +690,18 @@ app.post('/choose_date', (request, response) => {
   }).catch(err => console.log(err))
 
   result.then(data => {
-    if (data.result = []) {
-      makeDateCreateRequest().then(data => {
-        response.end(JSON.stringify(data))
-      }).catch(err => console.log(err))
+    if (data.result[0] == undefined) {
+      try {
+        makeDateCreateRequest().then(data => {
+          response.end(JSON.stringify(data))
+        }).catch(err => console.log(err))
+      }
+      catch (err) {
+        console.log(err)
+      }
     }
     else {
-      response.end(data)
+      response.end(JSON.stringify(data))
     }
   })
 
@@ -669,16 +724,12 @@ app.post('/choose_date', (request, response) => {
   }
 })
 
-app.post('/get_questions_id', (request, response) => {
-  let requestData = request.body
-})
-
 app.post('/save_radio', (request, response) => {
+  console.log('save radio')
   let requestData = request.body
-  console.log(requestData)
 
   let resultQuestions = new Promise((resolve, reject) => {
-    connection.query(`select * from questions where text like ('${requestData.itemText.slice(0, 50)}%');`, function (err, results, fields) {
+    connection.query(`select * from questions where text like ('${requestData.itemText.text.slice(0, 50)}%');`, function (err, results, fields) {
       answer = {}
       if (err !== null) {
         answer.result = err;
@@ -705,10 +756,15 @@ app.post('/save_radio', (request, response) => {
           reject(answer);
         }
         else {
-          answer.result = results;
-          answer.dataQuestion = dataQuestion.result
-          answer.message = 'everything is fine'
-          resolve(answer);
+          try {
+            answer.result = results;
+            answer.dataQuestion = dataQuestion.result
+            answer.message = 'everything is fine'
+            resolve(answer);
+          }
+          catch (err) {
+            console.log(err)
+          }
         }
       })
     })
@@ -808,6 +864,117 @@ app.post('/save_radio', (request, response) => {
   resultInsertAnswer.then(dataFinal => {
     console.log(dataFinal)
   })
+})
+
+app.post('/sign_in_data', (request, response) => {
+  let requestData = request.body
+  let sqlRequestText = `select * from users where login = '${requestData.login} '
+  and password = '${requestData.password}'`
+
+  let existenceCheck = new Promise((resolve, reject) => {
+    connection.query(sqlRequestText, function (err, results, fields) {
+      answer = {}
+      if (err !== null) {
+        answer.result = err;
+        answer.message = 'something went wrong'
+        reject(answer);
+      }
+      else {
+        answer.result = results;
+        answer.message = 'everything is fine'
+        resolve(answer);
+      }
+    })
+  }).catch(err => {
+    console.log(err)
+  })
+
+  existenceCheck.then(user => {
+    if (user.result[0] == undefined) {
+      console.log('incorrect data')
+      let answer = {
+        message: 'incorrect data'
+      }
+      response.end(JSON.stringify(answer))
+    }
+    else {
+      console.log('successful login')
+      let answer = {
+        message: 'successful login'
+      }
+      response.end(JSON.stringify(answer))
+    }
+  })
+})
+
+app.post('/sign_up_data', (request, response) => {
+  let requestData = request.body
+  let sqlRequestText = `select * from users where login = '${requestData.login} '
+  `
+
+  let existenceCheck = new Promise((resolve, reject) => {
+    connection.query(sqlRequestText, function (err, results, fields) {
+      answer = {}
+      if (err !== null) {
+        answer.result = err;
+        answer.message = 'something went wrong'
+        reject(answer);
+      }
+      else {
+        answer.result = results;
+        answer.message = 'everything is fine'
+        resolve(answer);
+      }
+    })
+  }).catch(err => {
+    console.log(err)
+  })
+
+  existenceCheck.then(user => {
+    if (user.result[0] == undefined) {
+      return true
+    }
+    else {
+      console.log('account is already taken')
+      let answer = {
+        message: 'account is already taken'
+      }
+      response.end(JSON.stringify(answer))
+      return false
+    }
+  })
+
+    .then((result) => {
+      if (result) {
+        let createUser = new Promise((resolve, reject) => {
+          let sqlRequestText = `insert into users(login, 
+        password) values('${requestData.login}', '${requestData.password}');`
+          connection.query(sqlRequestText, function (err, results, fields) {
+            answer = {}
+            if (err !== null) {
+              answer.result = err;
+              answer.message = 'something went wrong'
+              reject(answer);
+            }
+            else {
+              answer.result = results;
+              answer.message = 'everything is fine'
+              resolve(answer);
+            }
+          })
+        }).catch(err => {
+          console.log(err)
+        })
+
+        createUser.then(result => {
+          let answer = {
+            message: 'successful registration'
+          }
+          console.log('successful registration')
+          response.end(JSON.stringify(answer))
+        })
+      }
+    })
 })
 
 app.listen(3000, () => {

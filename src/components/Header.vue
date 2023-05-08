@@ -68,6 +68,11 @@ export default {
             <p>{{ studentName }}<br />{{ studentClassAndBirth }}</p>
           </div>
         </RouterLink>
+        <RouterLink to="../account">
+          <div class="header__login">
+            <img src="../assets/images/login.png" alt="" />
+          </div>
+        </RouterLink>
         <!-- <div class="first-page__info">
           <img
             src="../assets/images/первый экран/header faq.svg"
@@ -85,6 +90,18 @@ export default {
     margin-top: 20px;
     margin-bottom: -15px;
     cursor: pointer;
+  }
+  &__login {
+    img {
+      width: 52px;
+      cursor: pointer;
+      transition: 0.2s;
+      opacity: 1;
+      &:hover {
+        opacity: 0.7;
+        transition: 0.2s;
+      }
+    }
   }
 }
 </style>

@@ -10,6 +10,7 @@ export default {
       studentClassNumber: 0,
       studentClassLetter: "",
       studentId: 0,
+      monitoringDate: "",
       content: [
         {
           sectionTitle: "Личностные базовые учебные действия",
@@ -214,6 +215,16 @@ export default {
           ],
         },
         {
+          title: `Обращение за помощью и умение принимать помощь`,
+          items: [
+            {
+              points: 0,
+              idQuestion: 50,
+              text: `обращается за помощью и использует помощь`,
+            },
+          ],
+        },
+        {
           title: `Умение сотрудничать с взрослыми и сверстниками в разных социальных
               ситуациях`,
           items: [
@@ -285,6 +296,18 @@ export default {
           ],
         },
         {
+          title: `Наблюдение под руководством взрослого за предметами и явлениями
+              окружающей действительности`,
+          items: [
+            {
+              points: 0,
+              idQuestion: 49,
+              text: `наблюдает под руководством взрослого за предметами и явлениями
+              окружающей действительности`,
+            },
+          ],
+        },
+        {
           sectionTitle: "Познавательные базовые учебные действия",
           title: `Наблюдение под руководством взрослого за предметами и явлениями
               окружающей действительности`,
@@ -316,25 +339,41 @@ export default {
         false;
       }
     },
+    getMonitoringDate() {
+      console.log(this.monitoringDate == "");
+      if (this.monitoringDate == "") {
+        let answer = "Мониторингов не проводилось";
+        return answer;
+      }
+      let date = new Date(this.monitoringDate);
+      let day = date.getDate();
+      let month = date.getMonth();
+      let year = date.getFullYear();
+
+      if (month < 10) {
+        month = "0" + (Number(month) + 1);
+      }
+
+      let answer = `Результаты мониторинга ${day} ${month} ${year}`;
+      // const monthName = monthNames[monthIndex];
+      return answer;
+    },
     checkDeclination(points) {
-      console.log(points)
+      console.log(points);
       let answer = "";
       switch (points) {
         case 0:
           answer = "баллов";
           break;
-        // console.log(points + 0)
         case 1:
           answer = "балл";
           break;
-          // console.log(points + 1)
         case 2:
         case 3:
           answer = "балла";
           break;
-          // console.log(points + 2)
       }
-      return answer
+      return answer;
     },
     getDataStudent() {
       function getCookie(name) {
@@ -350,6 +389,7 @@ export default {
       let studentId = getCookie("studentId");
       //присваивание глобальной переменной значение из куки чтобы потом использовать при обновлении данных
       this.studentId = studentId;
+      console.log(studentId);
       let requestData = {
         studentId: studentId,
       };
@@ -362,12 +402,13 @@ export default {
           },
           body: JSON.stringify(requestData),
         }).then((data) => {
-          let answer = data.text();
+          let answer = data.json();
           return answer;
         });
 
         result.then((data) => {
-          const dataParsed = JSON.parse(data).resultStudent[0];
+          console.log(data);
+          const dataParsed = data.resultStudent[0];
           this.studentName = dataParsed.studentName;
           this.studentSurname = dataParsed.studentSurname;
           this.studentLastname = dataParsed.studentLastname;
@@ -378,13 +419,15 @@ export default {
           this.studentClassLetter = dataParsed.classLetter;
           // console.log(dataParsed);
 
-          let dataFull = JSON.parse(data);
+          //создание массива с id вопросов для подстановки значений в правую синюю метку данных с сервера
+          let dataFull = data;
           let idQuestionsArray = [];
           dataFull.resultAnswers.forEach((element, index) => {
             idQuestionsArray.push(element.idQuestion);
           });
           console.log(idQuestionsArray);
 
+          //присванивание меткам этих значений
           this.content.forEach((element, index) => {
             element.items.forEach((elementQuestion, indexQuestion) => {
               if (idQuestionsArray.includes(elementQuestion.idQuestion)) {
@@ -401,6 +444,9 @@ export default {
               }
             });
           });
+
+          this.monitoringDate = dataFull.resultPolls.date;
+          console.log(dataFull.resultPolls);
           // console.log(this.studentBirthDay);
         });
       } catch (error) {
@@ -567,7 +613,10 @@ export default {
       </div>
 
       <div class="title">
-        <p class="title__text-title">Результаты мониторинга</p>
+        <p class="title__text-title results__head-title">
+          <!-- Результаты мониторинга <span>{{ getMonitoringDate() }}</span> -->
+          {{ getMonitoringDate() }}
+        </p>
 
         <div class="results">
           <div
@@ -593,7 +642,10 @@ export default {
               :key="indexQuestion"
             >
               <div class="results__checkbox-wrap">
-                <div class="results__checkbox" :class="{'results__checkbox_filled' : question.points > 0}"></div>
+                <div
+                  class="results__checkbox"
+                  :class="{ results__checkbox_filled: question.points > 0 }"
+                ></div>
               </div>
               <p>
                 {{ question.text }}
@@ -650,6 +702,11 @@ export default {
 
 .results {
   &__item {
+  }
+  &__head-title {
+    span {
+      padding-left: 12px;
+    }
   }
   &__section-title {
     display: flex;

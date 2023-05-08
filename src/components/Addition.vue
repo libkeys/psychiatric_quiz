@@ -13,12 +13,9 @@ export default {
   watch: {
     updateAddition: function (newVal, oldVal) {
       if (newVal) {
-        console.log('addition: ', this.additionValue)
+        // console.log('addition: ', this.additionValue)
         this.$emit("saveAddition", this.additionValue);
       }
-    },
-    additionValue: function(newVal, oldVal){
-      console.log(this.additionValue)
     }
   },
 };
@@ -30,7 +27,7 @@ export default {
     <textarea
       class="form-control"
       rows="4"
-      :value="additionValue"
+      v-model="additionValue"
       placeholder="примечание"
     />
   </div>

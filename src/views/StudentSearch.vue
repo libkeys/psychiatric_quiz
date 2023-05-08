@@ -74,6 +74,7 @@ export default {
         });
 
         result.then((data) => {
+          console.log(data)
           this.students = JSON.parse(data);
           console.log(this.students[0].id);
         });

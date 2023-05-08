@@ -24,15 +24,30 @@ export default {
       showList: false,
       picked: "",
       scoped: false,
-      showAddition: false,
+      //словарь для сохранения значений для каждого блока addition
+      showAddition: {
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+        5: false,
+      },
       updateRadioValue: false,
       updateAddition: false,
       showReference: false,
       idArray: [],
       itemToSave: "",
-      addition: "",
+      addition: {
+        1: "",
+        2: "",
+        3: "",
+        4: "",
+        5: "",
+      },
+      indexForAddition: 0,
     };
   },
+  computed: {},
   methods: {
     getQuestionsId() {
       let requestData = {
@@ -75,8 +90,12 @@ export default {
       let answer = this.type === 3 ? true : false;
       return answer;
     },
-    toggleAddition() {
-      this.showAddition = !this.showAddition;
+    toggleAddition(index) {
+      this.showAddition[index + 1] = !this.showAddition[index + 1];
+    },
+    checkAddition(index) {
+      //index начинается с нуля, словарь значений с единицы
+      return this.showAddition[index + 1];
     },
     //метод вызывается при нажатии на кнопку сохранить, item - текст вопроса, необходимо
     //для того чтобы потом сохранить результат в базе данных
@@ -88,8 +107,11 @@ export default {
     },
     saveRadioData(data, index) {
       let idRadio = this.idArray[index - 1]; //don't need maybe
-      console.log(this.addition)
-      this.$emit("saveRadioDataGroup", data, this.itemToSave, this.addition);
+      //необходимо чтобы данные addition записались
+      setTimeout(() => {
+        console.log(this.addition[index]);
+        this.$emit("saveRadioDataGroup", data, this.itemToSave, this.addition[index]);
+      }, 1);
       this.updateRadioValue = false;
     },
     checkReference(index) {
@@ -106,14 +128,15 @@ export default {
     toggleReference() {
       this.showReference = !this.showReference;
     },
-    saveAddition(value) {
+    saveAddition(value, index) {
       this.updateAddition = false;
-      console.log(value)
-      this.addition = value;
+      this.addition[index] = value;
+      console.log(this.addition[index]);
     },
   },
   created() {
-    this.getQuestionsId();
+    //пока не понятно для чего вообще этот запрос был необходим
+    // this.getQuestionsId();
   },
   components: {
     ObservationRadioButtons,
@@ -152,7 +175,7 @@ export default {
           :key="index"
         >
           <p class="question-group__text-item" v-if="checkReference(index)">
-            {{ item }} 
+            {{ item.text }}
           </p>
           <div class="question-group__extended" v-if="!checkReference(index)">
             <div class="question-group__text-item-wrapper">
@@ -175,6 +198,7 @@ export default {
               :indexCreated="index"
               :indexToUpdate="indexToUpdate"
               :updateRadioValue="updateRadioValue"
+              :points="item.points"
               @send-radio-data="(data) => saveRadioData(data, index)"
             />
           </div>
@@ -183,6 +207,7 @@ export default {
               :indexCreated="index"
               :indexToUpdate="indexToUpdate"
               :updateRadioValue="updateRadioValue"
+              :points="item.points"
               @send-radio-data="saveRadioData"
             />
           </div>
@@ -192,7 +217,7 @@ export default {
           <div class="question-group__buttons">
             <button
               class="question-group__button-addition btn btn-primary"
-              @click="toggleAddition"
+              @click="toggleAddition(index)"
             >
               Добавить примечание
             </button>
@@ -204,8 +229,8 @@ export default {
             </button>
           </div>
           <AdditionComponent
-            v-if="showAddition"
-            @save-addition="(value) => saveAddition(value)"
+            v-if="checkAddition(index)"
+            @save-addition="(value) => saveAddition(value, index)"
             :updateAddition="updateAddition"
           />
         </div>

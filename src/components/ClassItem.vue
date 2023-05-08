@@ -57,13 +57,14 @@ li {
   align-items: center;
   text-align: center;
   position: relative;
+  height: 45px;
   p {
-    position: absolute;
+    position: absolute!important;
     top: 5px;
     left: 0;
   }
   button {
-    margin-left: 70px;
+    margin-left: 0px;
   }
   // height: 30px;
   // width: 80px;
