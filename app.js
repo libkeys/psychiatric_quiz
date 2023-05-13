@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 app.get('/', cors(), (req, res) => {
-  res.send('Hello, world!');
+  res.send('server works');
 });
 
 // sometimes works bad and strange, there are just pending statuses on requests
@@ -168,9 +168,9 @@ app.post('/get_classes', function (request, response) {
           }
         }
       )
-    })
+    }).catch(err => console.log(err))
     result.then(data => {
-      console.log(user)
+      console.log(data)
       response.end(JSON.stringify(data.result))
     })
     // result.then(data => data.text()).then(data => console.log(data))
@@ -248,7 +248,8 @@ app.post('/add_student', function (request, response) {
         let dataClass = data.result[0]
         try {
           let resultRequest = new Promise(function (resolve, reject) {
-            connection.query(`update students set classLetter = '${dataClass.classLetter}', classNumber = ${dataClass.classNumber} where
+            connection.query(`update students set classLetter = '${dataClass.classLetter}', classNumber = 
+            ${dataClass.classNumber}, userId = ${dataClass.userId} where
             studentClass = ${dataClass.id}`,
               function (err, results, fields) {
                 // console.log(results);
@@ -289,73 +290,104 @@ app.post('/add_student', function (request, response) {
 
 app.post('/get_student', function (request, response) {
   let requestData = request.body
-  let requestSQL = {
-    string: `select * from students `,
-    name: false,
-    surname: false,
-    lastname: false,
-    class: false
-  }
-  if (requestData.studentName !== '') {
-    requestSQL.name = true;
-  }
-  if (requestData.studentSurname !== '') {
-    requestSQL.surname = true;
-    requestSQL.string += ` where studentSurname like '%${requestData.studentSurname}%' `
-  }
-  if (requestData.studentLastname !== '') {
-    requestSQL.lastname = true;
-    requestSQL.string += `${requestSQL.surname ? 'and' : 'where'} studentLastname like '%${requestData.studentLastname}%' `
-  }
-  if (requestData.studentClass !== 'Выберете класс') {
-    requestSQL.class = true;
-    requestSQL.string += `${requestSQL.surname || requestSQL.lastname ? 'and' : 'where'} studentClass like '${requestData.studentClass}' `
-  }
-  if (requestSQL.name) {
-    requestSQL.string += `${requestSQL.surname || requestSQL.lastname || requestSQL.class ? 'and' : 'where'} studentName like '%${requestData.studentName}%' `
-  }
-  requestSQL.string += ';';
+
+  let sqlIdUserRequest = `select * from users where login = '${requestData.login}'`
   try {
     let result = new Promise(function (resolve, reject) {
-      connection.query(requestSQL.string,
-        function (err, results, fields) {
-          // console.log(results);
-          answer = {}
-          if (err !== null) {
-            answer.result = err;
-            answer.message = 'something went wrong'
-            console.log(err)
-            reject(answer);
-          }
-          else {
-            answer.result = results;
-            answer.message = 'everything is fine'
-            let resultCLasses = new Promise(function (resolve, reject) {
-              connection.query(`SELECT id, classNumber, classLetter FROM classes;`,
-                function (errClass, resultsClass, field) {
-                  if (errClass) {
-                    reject(errClass)
-                  }
-                  else {
-                    answer.result.forEach(element => {
-                      let objClass = resultsClass.find(elClass => elClass.id === element.studentClass)
-                      element.studentClass = objClass.classNumber + objClass.classLetter
-                    });
-                    resolve()
-                  }
+      connection.query(sqlIdUserRequest, function (err, results, fields) {
+        // console.log(results);
+        answer = {}
+        if (err !== null) {
+          answer.result = err;
+          answer.message = 'something went wrong'
+          reject(answer);
+        }
+        else {
+          answer.result = results;
+          answer.message = 'everything is fine'
+          resolve(answer);
+        }
+      })
+    }).catch(err => console.log(err))
+
+    result.then(data => {
+      let idUser = data.result[0].idUser
+
+      let requestSQL = {
+        string: `select * from students `,
+        name: false,
+        surname: false,
+        lastname: false,
+        class: false
+      }
+      if (requestData.studentName !== '') {
+        requestSQL.name = true;
+      }
+      if (requestData.studentSurname !== '') {
+        requestSQL.surname = true;
+        requestSQL.string += ` where studentSurname like '%${requestData.studentSurname}%' `
+      }
+      if (requestData.studentLastname !== '') {
+        requestSQL.lastname = true;
+        requestSQL.string += `${requestSQL.surname ? 'and' : 'where'} studentLastname like '%${requestData.studentLastname}%' `
+      }
+      if (requestData.studentClass !== 'Выберете класс') {
+        requestSQL.class = true;
+        requestSQL.string += `${requestSQL.surname || requestSQL.lastname ? 'and' : 'where'} studentClass like '${requestData.studentClass}' `
+      }
+      if (requestSQL.name) {
+        requestSQL.string += `${requestSQL.surname || requestSQL.lastname || requestSQL.class ? 'and' : 'where'} studentName like '%${requestData.studentName}%' `
+      }
+      requestSQL.string += `and userId = ${idUser};`;
+      console.log(requestSQL)
+      try {
+        let result = new Promise(function (resolve, reject) {
+          connection.query(requestSQL.string,
+            function (err, results, fields) {
+              // console.log(results);
+              answer = {}
+              if (err !== null) {
+                answer.result = err;
+                answer.message = 'something went wrong'
+                console.log(err)
+                reject(answer);
+              }
+              else {
+                answer.result = results;
+                answer.message = 'everything is fine'
+                let resultCLasses = new Promise(function (resolve, reject) {
+                  connection.query(`SELECT id, classNumber, classLetter FROM classes;`,
+                    function (errClass, resultsClass, field) {
+                      if (errClass) {
+                        reject(errClass)
+                      }
+                      else {
+                        answer.result.forEach(element => {
+                          let objClass = resultsClass.find(elClass => elClass.id === element.studentClass)
+                          element.studentClass = objClass.classNumber + objClass.classLetter
+                        });
+                        resolve()
+                      }
+                    })
                 })
+                resultCLasses.then(data => {
+                  response.send(JSON.stringify(answer.result))
+                })
+                resolve(answer);
+              }
             })
-            resultCLasses.then(data => {
-              response.send(JSON.stringify(answer.result))
-            })
-            resolve(answer);
-          }
         })
+      }
+      catch (error) {
+        console.log(error)
+      }
     })
   }
-  catch (error) {
-    console.log(error)
+  catch (err) {
+    console.log(err)
   }
+
+
 })
 
 app.post('/delete_student', function (request, response) {
@@ -391,49 +423,73 @@ app.post('/delete_student', function (request, response) {
   }
 })
 
-app.get('/all_students', function (request, response) {
+app.post('/all_students', function (request, response) {
   console.log('attemtp to send users list')
   let requestData = request.body;
+  let sqlIdUserRequest = `select * from users where login = '${requestData.login}'`
   try {
-    let result = new Promise(function (resolve, reject) {
-      connection.query(`select * from students`,
-        function (err, results, fields) {
-          // console.log(results);
-          answer = {}
-          if (err !== null) {
-            answer.result = err;
-            answer.message = 'something went wrong'
-            reject(answer);
-          }
-          else {
-            answer.result = results;
-            answer.message = 'everything is fine'
-
-            let resultClasses = new Promise(function (resolve, reject) {
-              connection.query(`SELECT id, classNumber, classLetter FROM classes;`,
-                function (errClass, resultsClass, field) {
-                  if (errClass) {
-                    reject(errClass)
-                  }
-                  else {
-                    answer.result.forEach(element => {
-                      let objClass = resultsClass.find(elClass => elClass.id === element.studentClass)
-                      element.studentClass = objClass.classNumber + objClass.classLetter
-                    });
-                    resolve()
-                  }
-                })
-            })
-            resultClasses.then(data => {
-              response.end(JSON.stringify(answer.result))
-            }).catch(error => {
-              console.log(error)
-            })
-            resolve(answer);
-          }
+    let resultLogin = new Promise(function (resolve, reject) {
+      connection.query(sqlIdUserRequest, function (err, results, fields) {
+        // console.log(results);
+        answer = {}
+        if (err !== null) {
+          answer.result = err;
+          answer.message = 'something went wrong'
+          reject(answer);
         }
-      )
+        else {
+          answer.result = results;
+          answer.message = 'everything is fine'
+          resolve(answer);
+        }
+      })
+    }).catch(err => console.log(err))
+
+    resultLogin.then(data => {
+      let idUser = data.result[0].idUser
+      let result = new Promise(function (resolve, reject) {
+        connection.query(`select * from students where userId = ${idUser}`,
+          function (err, results, fields) {
+            // console.log(results);
+            answer = {}
+            if (err !== null) {
+              answer.result = err;
+              answer.message = 'something went wrong'
+              reject(answer);
+            }
+            else {
+              answer.result = results;
+              answer.message = 'everything is fine'
+
+              let resultClasses = new Promise(function (resolve, reject) {
+                connection.query(`SELECT id, classNumber, classLetter FROM classes where userId = ${idUser};`,
+                  function (errClass, resultsClass, field) {
+                    if (errClass) {
+                      reject(errClass)
+                    }
+                    else {
+                      answer.result.forEach(element => {
+                        let objClass = resultsClass.find(elClass => elClass.id === element.studentClass)
+                        element.studentClass = objClass.classNumber + objClass.classLetter
+                      });
+                      resolve()
+                    }
+                  })
+              })
+              resultClasses.then(data => {
+                response.end(JSON.stringify(answer.result))
+              }).catch(error => {
+                console.log(error)
+              })
+              resolve(answer);
+            }
+          }
+        )
+      }).catch(err => console.log(err))
+
+      result.then(data => console.log(data))
     })
+
 
   }
   catch (err) {

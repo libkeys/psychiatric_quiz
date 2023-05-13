@@ -55,7 +55,7 @@ export default {
                 if (idQuestionsArray.includes(elementQuestion.idQuestion)) {
                   let sourceElement = answer.resultAnswers.find(
                     (elementGot) => {
-                      console.log("server element " + elementGot.idQuestion);
+                      // console.log("server element " + elementGot.idQuestion);
                       return (
                         elementGot.idQuestion == elementQuestion.idQuestion
                       );
@@ -63,7 +63,9 @@ export default {
                   );
                   this.content[index].items[indexQuestion].points =
                     sourceElement.answerPoints;
-                  console.log(this.content);
+                  this.content[index].items[indexQuestion].addition =
+                    sourceElement.addition;
+                  // console.log(this.content);
                   // console.log(idQuestionsArray, ' ', element, ' ', elementQuestion);
                 }
               });
@@ -157,6 +159,7 @@ export default {
           items: [
             {
               points: 0,
+              addition: '',
               idQuestion: 1,
               text: `соблюдает правила поведения во время посещения общественных мест, культурно-значимых объектов`,
             },

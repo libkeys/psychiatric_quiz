@@ -7,6 +7,7 @@ export default {
       classNumber: "Выберете номер класса",
       classLetter: "",
       addedClasses: [],
+      addedClassesShow: true,
     };
   },
   methods: {
@@ -21,12 +22,12 @@ export default {
         );
         return matches ? decodeURIComponent(matches[1]) : undefined;
       }
-      let login = getCookie('userLogin')
+      let login = getCookie("userLogin");
 
       let requestData = {
         classNumber: this.classNumber,
         classLetter: this.classLetter,
-        login: login
+        login: login,
       };
       try {
         let result = fetch("http://localhost:3000/add_class", {
@@ -43,7 +44,10 @@ export default {
 
         result.then((data) => {
           console.log(data);
-          this.getClasses();
+          setTimeout(() => {
+            this.getClasses();
+            //задержка необходима для получения последнего объекта в списке классов
+          }, 100);
         });
       } catch (error) {
         console.log(error);
@@ -60,10 +64,10 @@ export default {
         );
         return matches ? decodeURIComponent(matches[1]) : undefined;
       }
-      let login = getCookie('userLogin')
+      let login = getCookie("userLogin");
       let requestData = {
-        login: login
-      }
+        login: login,
+      };
 
       try {
         let result = fetch("http://localhost:3000/get_classes", {
@@ -72,7 +76,7 @@ export default {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(requestData)
+          body: JSON.stringify(requestData),
         }).then((data) => {
           let answer = data.text();
           return answer;
@@ -80,6 +84,7 @@ export default {
 
         result.then((data) => {
           this.addedClasses = JSON.parse(data);
+          let length = data.length;
           console.log(data);
         });
       } catch (error) {
@@ -162,7 +167,7 @@ export default {
         </form>
       </div>
 
-      <div class="list-classes">
+      <div class="list-classes" v-if="addedClassesShow">
         <p>Вы добавили...</p>
         <ul>
           <ClassItem

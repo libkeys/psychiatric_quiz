@@ -13,13 +13,28 @@ export default {
   },
   methods: {
     getClasses() {
+      function getCookie(name) {
+        let matches = document.cookie.match(
+          new RegExp(
+            "(?:^|; )" +
+              name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+              "=([^;]*)"
+          )
+        );
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+      }
+      let login = getCookie("userLogin");
+      let requestData = {
+        login: login,
+      };
       try {
         let result = fetch("http://localhost:3000/get_classes", {
-          method: "GET",
+          method: "POST",
           mode: "cors",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify(requestData),
         }).then((data) => {
           let answer = data.text();
           return answer;
@@ -33,11 +48,24 @@ export default {
       }
     },
     getStudent() {
+      function getCookie(name) {
+        let matches = document.cookie.match(
+          new RegExp(
+            "(?:^|; )" +
+              name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+              "=([^;]*)"
+          )
+        );
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+      }
+      let login = getCookie("userLogin");
+
       let requestData = {
         studentName: this.studentName,
         studentSurname: this.studentSurname,
         studentLastname: this.studentLastname,
         studentClass: this.studentClass,
+        login: login,
       };
       try {
         let result = fetch("http://localhost:3000/get_student", {
@@ -61,20 +89,36 @@ export default {
       }
     },
     allStudents() {
+      function getCookie(name) {
+        let matches = document.cookie.match(
+          new RegExp(
+            "(?:^|; )" +
+              name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+              "=([^;]*)"
+          )
+        );
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+      }
+      let login = getCookie("userLogin");
+      let requestData = {
+        login: login
+      }
+
       try {
         let result = fetch("http://localhost:3000/all_students", {
-          method: "GET",
+          method: "POST",
           mode: "cors",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify(requestData)
         }).then((data) => {
           let answer = data.text();
           return answer;
         });
 
         result.then((data) => {
-          console.log(data)
+          console.log(data);
           this.students = JSON.parse(data);
           console.log(this.students[0].id);
         });
@@ -280,11 +324,12 @@ export default {
 .list-classes {
   li {
     p {
-      position: relative;
+      // position: relative;
     }
     button {
       margin-top: -5px;
       margin-left: 75px;
+      margin-left: 450px;
     }
   }
   &__name {
@@ -293,6 +338,7 @@ export default {
     cursor: pointer;
   }
   &__class {
+    margin-left: 300px;
   }
 }
 </style>

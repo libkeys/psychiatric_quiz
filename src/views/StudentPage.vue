@@ -617,6 +617,9 @@ export default {
           <!-- Результаты мониторинга <span>{{ getMonitoringDate() }}</span> -->
           {{ getMonitoringDate() }}
         </p>
+        <div class="title__button">
+          <button>Продолжить заполнение</button>
+        </div>
 
         <div class="results">
           <div

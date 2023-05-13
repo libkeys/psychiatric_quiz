@@ -9,6 +9,9 @@ export default {
     updateAddition: {
       type: Boolean,
     },
+    additionValueGotten: {
+      type: String
+    }
   },
   watch: {
     updateAddition: function (newVal, oldVal) {
@@ -18,6 +21,12 @@ export default {
       }
     }
   },
+  created(){
+    console.log(this.additionValueGotten)
+    if (this.additionValueGotten){
+      this.additionValue = this.additionValueGotten
+    }
+  }
 };
 </script>
 

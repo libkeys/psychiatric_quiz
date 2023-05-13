@@ -32,6 +32,13 @@ export default {
         4: false,
         5: false,
       },
+      showInfo: {
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+        5: false,
+      },
       updateRadioValue: false,
       updateAddition: false,
       showReference: false,
@@ -110,7 +117,12 @@ export default {
       //необходимо чтобы данные addition записались
       setTimeout(() => {
         console.log(this.addition[index]);
-        this.$emit("saveRadioDataGroup", data, this.itemToSave, this.addition[index]);
+        this.$emit(
+          "saveRadioDataGroup",
+          data,
+          this.itemToSave,
+          this.addition[index]
+        );
       }, 1);
       this.updateRadioValue = false;
     },
@@ -133,8 +145,35 @@ export default {
       this.addition[index] = value;
       console.log(this.addition[index]);
     },
+    createdAddition() {
+      this.items.forEach((el, index) => {
+        console.log(el.addition);
+        // console.log(Reflect.get(el, 'addition'));
+        // el.forEach((elQuestion, indexQuestion) => {
+        //   if (elQuestion.addition) {
+        //     this.showAddition[index + 1] = elQuestion.addition;
+        //   }
+        // });
+      });
+      // console.log(this.showAddition);
+    },
+    toggleInfo(index) {
+      this.showInfo[index + 1] = !this.showInfo[index + 1];
+      // console.log(this.showInfo)
+    },
+    existsInfo(item) {
+      let info = item.info;
+      if (info) {
+        console.log(info);
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   created() {
+    this.createdAddition();
+    console.log(this.items);
     //пока не понятно для чего вообще этот запрос был необходим
     // this.getQuestionsId();
   },
@@ -174,9 +213,24 @@ export default {
           v-for="(item, index) in items"
           :key="index"
         >
-          <p class="question-group__text-item" v-if="checkReference(index)">
-            {{ item.text }}
-          </p>
+          <div class="question-group__text-wrapper">
+            <p class="question-group__text-item" v-if="checkReference(index)">
+              {{ item.text }}
+            </p>
+            <img
+              v-if="existsInfo(item)"
+              class="question-group__info-icon"
+              src="../assets/images/question.png"
+              alt=""
+              @click="toggleInfo(index)"
+            />
+          </div>
+          <div
+            class="question-group__info"
+            :class="{ 'question-group__info_active': showInfo[index + 1] }"
+          >
+            <p>{{ item.info }}</p>
+          </div>
           <div class="question-group__extended" v-if="!checkReference(index)">
             <div class="question-group__text-item-wrapper">
               <p class="question-group__text-item">
@@ -193,7 +247,13 @@ export default {
               <p>{{ references[index] }}</p>
             </div>
           </div>
-          <div class="question-group__radio-buttons" v-if="checkFirstType()">
+          <div
+            class="question-group__radio-buttons"
+            v-if="checkFirstType()"
+            :class="{
+              'question-group__radio-buttons_active': showInfo[index + 1],
+            }"
+          >
             <ObservationRadioButtons
               :indexCreated="index"
               :indexToUpdate="indexToUpdate"
@@ -232,6 +292,7 @@ export default {
             v-if="checkAddition(index)"
             @save-addition="(value) => saveAddition(value, index)"
             :updateAddition="updateAddition"
+            :additionValueGotten="item.addition"
           />
         </div>
       </div>
@@ -242,7 +303,8 @@ export default {
 <style lang="scss">
 .question-group {
   // margin: 10px 0px 40px 0px;
-  overflow: hidden;
+  // overflow: hidden;
+  position: relative;
   &__arrow {
     width: 25px;
     height: 25px;
@@ -283,6 +345,7 @@ export default {
   }
   &__item {
     margin-bottom: 35px;
+    width: 100%;
     &:first-child {
       margin-top: 50px;
     }
@@ -343,6 +406,32 @@ export default {
     }
   }
   &__reference {
+  }
+  &__text-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  &__info-icon {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+  }
+  &__radio-buttons {
+    margin-top: 0;
+    transition: 0.5s;
+    &_active {
+      margin-top: 300px;
+      transition: 0.5s;
+    }
+  }
+  &__info {
+    margin-left: -450px;
+    transition: 0.5s;
+    &_active {
+      margin-left: 0px;
+      transition: 0.5s;
+    }
   }
 }
 
