@@ -1,11 +1,40 @@
 <script>
-export default({
+export default {
+  methods: {
+    saveType(type) {
+      function getCookie(name) {
+        let matches = document.cookie.match(
+          new RegExp(
+            "(?:^|; )" +
+              name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+              "=([^;]*)"
+          )
+        );
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+      }
+      let datePoll = getCookie("datePoll");
+      let studentId = getCookie("studentId");
+      let requestData = {
+        type: type,
+        datePoll : datePoll,
+        studentId : studentId
+      };
+      let result = fetch("http://localhost:3000/save_monitoring_type", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+    },
+  },
   props: {
     showStudent: {
       type: Boolean,
     },
   },
-})
+};
 </script>
 
 
@@ -19,10 +48,9 @@ export default({
       </div>
 
       <div class="choice-card">
-        <RouterLink to="observation_test">
+        <RouterLink @click="saveType(1)" to="observation_test">
           <div class="choice-card__card">
             <img
-              onclick="cmToMs2()"
               src="../assets/images/выбор методики/наблюдение.svg"
               alt="observation"
             />
@@ -42,7 +70,7 @@ export default({
             </div>
           </div>
         </RouterLink>
-        <RouterLink to="../speaking_test">
+        <RouterLink @click="saveType(2)" to="../speaking_test">
           <div class="choice-card__card">
             <img
               onclick="cmToMs()"
@@ -65,7 +93,7 @@ export default({
             </div>
           </div>
         </RouterLink>
-        <RouterLink to="../experiment_test">
+        <RouterLink @click="saveType(3)" to="../experiment_test">
           <div class="choice-card__card">
             <img
               onclick="cmToMs3()"

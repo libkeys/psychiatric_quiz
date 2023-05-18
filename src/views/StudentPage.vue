@@ -11,6 +11,7 @@ export default {
       studentClassLetter: "",
       studentId: 0,
       monitoringDate: "",
+      lastMonitoringType: 0,
       content: [
         {
           sectionTitle: "Личностные базовые учебные действия",
@@ -340,12 +341,13 @@ export default {
       }
     },
     getMonitoringDate() {
-      console.log(this.monitoringDate == "");
-      if (this.monitoringDate == "") {
+      console.log(this.monitoringDate);
+      if (this.monitoringDate == "" || this.monitoringDate == undefined) {
         let answer = "Мониторингов не проводилось";
         return answer;
       }
       let date = new Date(this.monitoringDate);
+      document.cookie = `datePoll=${this.monitoringDate}`;
       let day = date.getDate();
       let month = date.getMonth();
       let year = date.getFullYear();
@@ -355,6 +357,7 @@ export default {
       }
 
       let answer = `Результаты мониторинга ${day} ${month} ${year}`;
+      console.log(this.monitoringDate)
       // const monthName = monthNames[monthIndex];
       return answer;
     },
@@ -419,34 +422,37 @@ export default {
           this.studentClassLetter = dataParsed.classLetter;
           // console.log(dataParsed);
 
-          //создание массива с id вопросов для подстановки значений в правую синюю метку данных с сервера
           let dataFull = data;
-          let idQuestionsArray = [];
-          dataFull.resultAnswers.forEach((element, index) => {
-            idQuestionsArray.push(element.idQuestion);
-          });
-          console.log(idQuestionsArray);
-
-          //присванивание меткам этих значений
-          this.content.forEach((element, index) => {
-            element.items.forEach((elementQuestion, indexQuestion) => {
-              if (idQuestionsArray.includes(elementQuestion.idQuestion)) {
-                let sourceElement = dataFull.resultAnswers.find(
-                  (elementGot) => {
-                    console.log("server element " + elementGot.idQuestion);
-                    return elementGot.idQuestion == elementQuestion.idQuestion;
-                  }
-                );
-                this.content[index].items[indexQuestion].points =
-                  sourceElement.answerPoints;
-                console.log(this.content);
-                // console.log(idQuestionsArray, ' ', element, ' ', elementQuestion);
-              }
+          if (dataFull.resultPolls) {
+            //создание массива с id вопросов для подстановки значений в правую синюю метку данных с сервера
+            let idQuestionsArray = [];
+            this.lastMonitoringType = dataFull.resultPolls.type;
+            dataFull.resultAnswers.forEach((element, index) => {
+              idQuestionsArray.push(element.idQuestion);
             });
-          });
+            //присванивание меткам этих значений
+            this.content.forEach((element, index) => {
+              element.items.forEach((elementQuestion, indexQuestion) => {
+                if (idQuestionsArray.includes(elementQuestion.idQuestion)) {
+                  let sourceElement = dataFull.resultAnswers.find(
+                    (elementGot) => {
+                      console.log("server element " + elementGot.idQuestion);
+                      return (
+                        elementGot.idQuestion == elementQuestion.idQuestion
+                      );
+                    }
+                  );
+                  this.content[index].items[indexQuestion].points =
+                    sourceElement.answerPoints;
+                  console.log(this.content);
+                  // console.log(idQuestionsArray, ' ', element, ' ', elementQuestion);
+                }
+              });
+            });
+            this.monitoringDate = dataFull.resultPolls.date;
+          }
 
-          this.monitoringDate = dataFull.resultPolls.date;
-          console.log(dataFull.resultPolls);
+          console.log(this.monitoringDate);
           // console.log(this.studentBirthDay);
         });
       } catch (error) {
@@ -488,6 +494,24 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    pathMonitoring() {
+      let answer = "../observation_test";
+      setTimeout(() => {
+        switch (this.monitoringDate) {
+          case "1":
+            answer = "../observation_test";
+            break;
+          case "2":
+            answer = "../talking_test";
+            break;
+          case "3":
+            answer = "../experiment_test";
+            break;
+        }
+        return answer;
+      }, 500);
+      return answer;
     },
   },
   created() {
@@ -617,11 +641,13 @@ export default {
           <!-- Результаты мониторинга <span>{{ getMonitoringDate() }}</span> -->
           {{ getMonitoringDate() }}
         </p>
-        <div class="title__button">
-          <button>Продолжить заполнение</button>
-        </div>
 
         <div class="results">
+          <div class="results__button">
+            <RouterLink :to="pathMonitoring()">
+              <button class="btn btn-primary">Продолжить заполнение</button>
+            </RouterLink>
+          </div>
           <div
             v-for="(item, index) in content"
             class="results__item"
@@ -703,7 +729,16 @@ export default {
   }
 }
 
+.title {
+  &__text-title {
+    margin-bottom: 40px;
+  }
+}
+
 .results {
+  &__button {
+    margin-bottom: 100px;
+  }
   &__item {
   }
   &__head-title {

@@ -21,9 +21,9 @@ app.get('/', cors(), (req, res) => {
 // sometimes works bad and strange, there are just pending statuses on requests
 const connection = mysql.createConnection({
   host: 'sql7.freemysqlhosting.net',
-  user: 'sql7616824',
-  database: 'sql7616824',
-  password: 'yvAMi2irkA'
+  user: 'sql7618544',
+  database: 'sql7618544',
+  password: 'ba7uTQHGbL'
 });
 
 // const connection = mysql.createConnection({
@@ -778,6 +778,32 @@ app.post('/choose_date', (request, response) => {
       })
     }).catch(err => console.log(err))
   }
+})
+
+app.post('/save_monitoring_type', (request, response) => {
+  let requestData = request.body
+  let sqlRequest = `update polls set type = ${requestData.type} where idStudent = ${requestData.studentId} and 
+  date = '${requestData.datePoll}'`
+  console.log(sqlRequest)
+  let result = new Promise((resolve, reject) => {
+    connection.query(sqlRequest, function (err, results, fields) {
+      answer = {}
+      if (err !== null) {
+        answer.result = err;
+        answer.message = 'something went wrong'
+        reject(answer);
+      }
+      else {
+        answer.result = results;
+        answer.message = 'everything is fine'
+        resolve(answer);
+      }
+    })
+  }).catch(err => console.log(err))
+
+  result.then(answer => {
+    console.log(answer)
+  })
 })
 
 app.post('/save_radio', (request, response) => {

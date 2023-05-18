@@ -31,6 +31,8 @@ export default {
         3: false,
         4: false,
         5: false,
+        6: false,
+        7: false,
       },
       showInfo: {
         1: false,
@@ -38,6 +40,8 @@ export default {
         3: false,
         4: false,
         5: false,
+        6: false,
+        7: false,
       },
       updateRadioValue: false,
       updateAddition: false,
@@ -50,6 +54,8 @@ export default {
         3: "",
         4: "",
         5: "",
+        6: "",
+        7: "",
       },
       indexForAddition: 0,
     };
@@ -126,9 +132,9 @@ export default {
       }, 1);
       this.updateRadioValue = false;
     },
-    checkReference(index) {
-      if (this.references[0] != "") {
-        if (this.references[index] == "") {
+    checkReference(item) {
+      if (item.reference != "") {
+        if (item.reference == "") {
           return true;
         } else {
           return false;
@@ -214,7 +220,7 @@ export default {
           :key="index"
         >
           <div class="question-group__text-wrapper">
-            <p class="question-group__text-item" v-if="checkReference(index)">
+            <p class="question-group__text-item" v-if="checkReference(item)">
               {{ item.text }}
             </p>
             <img
@@ -231,14 +237,14 @@ export default {
           >
             <p>{{ item.info }}</p>
           </div>
-          <div class="question-group__extended" v-if="!checkReference(index)">
+          <div class="question-group__extended" v-if="!checkReference(item)">
             <div class="question-group__text-item-wrapper">
               <p class="question-group__text-item">
                 {{ item }}
               </p>
               <img
                 @click="toggleReference"
-                v-if="!checkReference(index)"
+                v-if="!checkReference(item)"
                 class="question-group__reference"
                 src="../assets/images/первый экран/header faq.svg"
               />

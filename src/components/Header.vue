@@ -86,6 +86,7 @@ export default {
 
 <style lang="scss">
 .header {
+  // height: 111px;
   &__student-info {
     margin-top: 20px;
     margin-bottom: -15px;

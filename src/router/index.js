@@ -13,6 +13,7 @@ import SpeakingTest from '../views/SpeakingTest.vue'
 import ExperimentTest from '../views/ExperimentTest.vue'
 import Authorization from '../views/Authorization.vue'
 import Account from '../views/Account.vue'
+import Report from '../views/Report.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -107,6 +108,13 @@ const router = createRouter({
       component: Account,
       props: {
         showStudent: false
+      }
+    },
+    {
+      path: '/report',
+      component: Report,
+      props: {
+        showStudent: true
       }
     }
     // {

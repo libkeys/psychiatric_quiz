@@ -158,9 +158,7 @@ export default {
       document.cookie = `studentId=${id}`;
       // запись значений выбранного ученика в куки для избежания дополнительного запроса к БД
       let currentStudent = this.students.find((element) => element.id == id);
-      document.cookie = `studentName=${currentStudent.studentName}`;
-      document.cookie = `studentName=${currentStudent.studentSurname}`;
-      document.cookie = `studentName=${currentStudent.studentLastname}`;
+      document.cookie = `studentName=${currentStudent.studentName} ${currentStudent.studentSurname} ${currentStudent.studentLastname}`;
       let classStudent =
         currentStudent.classNumber + currentStudent.classLetter;
       document.cookie = `studentClassFullName=${classStudent}`;
