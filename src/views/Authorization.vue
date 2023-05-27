@@ -44,9 +44,9 @@ export default {
             }
             if (answer.message == "successful login") {
               this.label = "successful login";
-              // setTimeout(() => {
-              //   this.$router.push({ path: "/" });
-              // }, 1500);
+              setTimeout(() => {
+                this.$router.push({ path: "/" });
+              }, 1500);
               document.cookie = `userLogin=${this.login}`
               document.cookie = `userPassword=${this.password}`
               this.showLabel = true;
@@ -89,9 +89,9 @@ export default {
             }
             if (answer.message == "successful registration") {
               this.label = "successful registration";
-              // setTimeout(() => {
-              //   this.$router.push({ path: "/" });
-              // }, 1500);
+              setTimeout(() => {
+                this.$router.push({ path: "/" });
+              }, 1500);
               document.cookie = `userLogin=${this.login}`
               document.cookie = `userPassword=${this.password}`
               this.showLabel = true;

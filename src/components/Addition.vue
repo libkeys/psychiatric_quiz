@@ -16,7 +16,7 @@ export default {
   watch: {
     updateAddition: function (newVal, oldVal) {
       if (newVal) {
-        // console.log('addition: ', this.additionValue)
+        console.log('addition: ', this.additionValue)
         this.$emit("saveAddition", this.additionValue);
       }
     }

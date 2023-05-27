@@ -6,8 +6,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const mysql = require('mysql2');
-const { use } = require('browser-sync');
-const { rejects } = require('assert');
+// const { use } = require('browser-sync');
+// const { rejects } = require('assert');
 
 app.use(express.static(__dirname + '/public'))
 app.use(express.urlencoded({ extended: false }));

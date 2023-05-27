@@ -133,14 +133,11 @@ export default {
       this.updateRadioValue = false;
     },
     checkReference(item) {
-      if (item.reference != "") {
-        if (item.reference == "") {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
+      if (item.reference != "" && item.reference != undefined) {
         return true;
+      } else {
+        console.log(item)
+        return false;
       }
     },
     toggleReference() {
@@ -150,6 +147,7 @@ export default {
       this.updateAddition = false;
       this.addition[index] = value;
       console.log(this.addition[index]);
+      console.log('saved')
     },
     createdAddition() {
       this.items.forEach((el, index) => {
@@ -168,9 +166,8 @@ export default {
       // console.log(this.showInfo)
     },
     existsInfo(item) {
-      let info = item.info;
+      let info = item.reference;
       if (info) {
-        console.log(info);
         return true;
       } else {
         return false;
@@ -180,8 +177,6 @@ export default {
   created() {
     this.createdAddition();
     console.log(this.items);
-    //пока не понятно для чего вообще этот запрос был необходим
-    // this.getQuestionsId();
   },
   components: {
     ObservationRadioButtons,
@@ -219,39 +214,38 @@ export default {
           v-for="(item, index) in items"
           :key="index"
         >
-          <div class="question-group__text-wrapper">
-            <p class="question-group__text-item" v-if="checkReference(item)">
+          <div class="question-group__text-wrapper" v-if="existsInfo(item)">
+            <p class="question-group__text-item">
               {{ item.text }}
             </p>
             <img
+                @click="toggleInfo(index)"
+                class="question-group__reference"
+                src="../assets/images/первый экран/header faq.svg"
+              />
+            <!-- <img
               v-if="existsInfo(item)"
               class="question-group__info-icon"
               src="../assets/images/question.png"
               alt=""
               @click="toggleInfo(index)"
-            />
+            /> -->
           </div>
-          <div
+          <!-- <div
             class="question-group__info"
             :class="{ 'question-group__info_active': showInfo[index + 1] }"
           >
             <p>{{ item.info }}</p>
-          </div>
-          <div class="question-group__extended" v-if="!checkReference(item)">
-            <div class="question-group__text-item-wrapper">
+          </div> -->
+          <div class="question-group__extended" v-if="existsInfo(item)">
+            <div class="question-group__text-extended-wrapper" :class="{'question-group__text-extended-wrapper_active' : showInfo[index + 1]}">
               <p class="question-group__text-item">
-                {{ item }}
+                {{ item.reference }}
               </p>
-              <img
-                @click="toggleReference"
-                v-if="!checkReference(item)"
-                class="question-group__reference"
-                src="../assets/images/первый экран/header faq.svg"
-              />
             </div>
-            <div class="question-group__reference" v-if="showReference">
+            <!-- <div class="question-group__reference" v-if="showReference">
               <p>{{ references[index] }}</p>
-            </div>
+            </div> -->
           </div>
           <div
             class="question-group__radio-buttons"
@@ -278,7 +272,7 @@ export default {
             />
           </div>
           <div class="question-group__radio-buttons" v-if="checkThirdType()">
-            <ExperimentRadioButtons />
+            <ExperimentRadioButtons :options="item.options"/>
           </div>
           <div class="question-group__buttons">
             <button
@@ -350,7 +344,10 @@ export default {
     z-index: 10;
   }
   &__item {
-    margin-bottom: 35px;
+    margin-bottom: 100px;
+    &:last-child{
+      margin-bottom: 0;
+    }
     width: 100%;
     &:first-child {
       margin-top: 50px;
@@ -398,25 +395,44 @@ export default {
     // }
   }
   &__extended {
+
   }
-  &__text-item-wrapper {
+  &__text-extended-wrapper {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    height: 0px;
+    transition: .5s;
     p {
+      width: 800px;
+      margin-left: -1000px;
+      transition: .5s;
     }
     img {
       margin-top: -20px;
       margin-right: 10px;
       cursor: pointer;
     }
+    &_active{
+      height: 100%;
+      transition: .5s;
+      p{
+        margin-left: 0;
+        transition: .5s;
+      }
+    }
   }
   &__reference {
+    cursor: pointer;
   }
   &__text-wrapper {
     display: flex;
     justify-content: space-between;
     width: 100%;
+
+    .question-group__text-item{
+      width: 800px;
+    }
   }
   &__info-icon {
     width: 30px;
@@ -427,7 +443,8 @@ export default {
     margin-top: 0;
     transition: 0.5s;
     &_active {
-      margin-top: 300px;
+      // margin-top: 300px;
+      // margin-bottom: 200px;
       transition: 0.5s;
     }
   }
