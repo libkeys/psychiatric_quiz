@@ -187,7 +187,7 @@ export default {
             <div class="button__text">Добавить нового ученика</div>
 
             <div class="button__row">
-              <img src="image/beegining of work/bow__row-icon.svg" alt="" />
+              <!-- <img src="image/beegining of work/bow__row-icon.svg" alt="" /> -->
             </div>
           </div>
         </RouterLink>

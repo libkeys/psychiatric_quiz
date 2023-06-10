@@ -18,43 +18,43 @@ export default {
         document.cookie = `datePoll=${this.dateChosen}`;
         console.log(this.dateChosen);
       }
-      function getCookie(name) {
-        let matches = document.cookie.match(
-          new RegExp(
-            "(?:^|; )" +
-              name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
-              "=([^;]*)"
-          )
-        );
-        return matches ? decodeURIComponent(matches[1]) : undefined;
-      }
-      let datePoll = getCookie("datePoll");
-      let studentId = getCookie("studentId");
-      let requestData = {
-        date: datePoll,
-        studentId: studentId,
-      };
-      try {
-        let result = fetch("http://localhost:3000/choose_date", {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestData),
-        }).then((data) => {
-          let answer = data.text();
-          return answer;
-        });
+      // function getCookie(name) {
+      //   let matches = document.cookie.match(
+      //     new RegExp(
+      //       "(?:^|; )" +
+      //         name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+      //         "=([^;]*)"
+      //     )
+      //   );
+      //   return matches ? decodeURIComponent(matches[1]) : undefined;
+      // }
+      // let datePoll = getCookie("datePoll");
+      // let studentId = getCookie("studentId");
+      // let requestData = {
+      //   date: datePoll,
+      //   studentId: studentId,
+      // };
+      // try {
+      //   let result = fetch("http://localhost:3000/choose_date", {
+      //     method: "POST",
+      //     mode: "cors",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify(requestData),
+      //   }).then((data) => {
+      //     let answer = data.text();
+      //     return answer;
+      //   });
 
-        result.then((data) => {
-          this.addedClasses = JSON.parse(data);
-          console.log(data);
-          this.exist = false;
-        });
-      } catch (error) {
-        console.log(error);
-      }
+      //   result.then((data) => {
+      //     this.addedClasses = JSON.parse(data);
+      //     console.log(data);
+      //     this.exist = false;
+      //   });
+      // } catch (error) {
+      //   console.log(error);
+      // }
     },
     props: {
       showStudent: {
@@ -105,7 +105,7 @@ export default {
             <div class="button__text">Назад</div>
 
             <div class="button__row">
-              <img src="image/beegining of work/bow__row-icon.svg" alt="" />
+              <!-- <img src="image/beegining of work/bow__row-icon.svg" alt="" /> -->
             </div>
           </div>
         </div>

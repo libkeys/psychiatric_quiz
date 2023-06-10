@@ -42,7 +42,7 @@ connection.connect(function (err) {
   }
 })
 
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors());
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -726,11 +726,11 @@ app.post("/update_student", (req, res) => {
 
 });
 
-app.post('/choose_date', (request, response) => {
-  console.log('choose date')
+app.post('/save_monitoring', (request, response) => {
   let requestData = request.body
+  // console.log(requestData.date + ' date')
   let result = new Promise((resolve, reject) => {
-    connection.query(`select * from polls where date ='${requestData.date}'`, function (err, results, fields) {
+    connection.query(`select * from polls where date ='${requestData.date}' and type = ${requestData.type}`, function (err, results, fields) {
       answer = {}
       if (err !== null) {
         answer.result = err;
@@ -763,7 +763,7 @@ app.post('/choose_date', (request, response) => {
 
   function makeDateCreateRequest() {
     return new Promise((resolve, reject) => {
-      connection.query(`insert into polls(idStudent, date) values(${requestData.studentId}, '${requestData.date}');`, function (err, results, fields) {
+      connection.query(`insert into polls(idStudent, date, type) values(${requestData.studentId}, '${requestData.date}', ${requestData.type});`, function (err, results, fields) {
         answer = {}
         if (err !== null) {
           answer.result = err;
@@ -772,6 +772,7 @@ app.post('/choose_date', (request, response) => {
         }
         else {
           answer.result = results;
+          console.log(results)
           answer.message = 'everything is fine'
           resolve(answer);
         }
@@ -780,31 +781,31 @@ app.post('/choose_date', (request, response) => {
   }
 })
 
-app.post('/save_monitoring_type', (request, response) => {
-  let requestData = request.body
-  let sqlRequest = `update polls set type = ${requestData.type} where idStudent = ${requestData.studentId} and 
-  date = '${requestData.datePoll}'`
-  console.log(sqlRequest)
-  let result = new Promise((resolve, reject) => {
-    connection.query(sqlRequest, function (err, results, fields) {
-      answer = {}
-      if (err !== null) {
-        answer.result = err;
-        answer.message = 'something went wrong'
-        reject(answer);
-      }
-      else {
-        answer.result = results;
-        answer.message = 'everything is fine'
-        resolve(answer);
-      }
-    })
-  }).catch(err => console.log(err))
+// app.post('/save_monitoring_type', (request, response) => {
+//   let requestData = request.body
+//   let sqlRequest = `update polls set type = ${requestData.type} where idStudent = ${requestData.studentId} and 
+//   date = '${requestData.datePoll}'`
+//   console.log(sqlRequest)
+//   let result = new Promise((resolve, reject) => {
+//     connection.query(sqlRequest, function (err, results, fields) {
+//       answer = {}
+//       if (err !== null) {
+//         answer.result = err;
+//         answer.message = 'something went wrong'
+//         reject(answer);
+//       }
+//       else {
+//         answer.result = results;
+//         answer.message = 'everything is fine'
+//         resolve(answer);
+//       }
+//     })
+//   }).catch(err => console.log(err))
 
-  result.then(answer => {
-    console.log(answer)
-  })
-})
+//   result.then(answer => {
+//     console.log(answer)
+//   })
+// })
 
 app.post('/save_radio', (request, response) => {
   console.log('save radio')

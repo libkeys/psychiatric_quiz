@@ -29,7 +29,7 @@ export default({
 
       <div class="choice-card">
         <div class="choice-card__card yyd">
-          <img src="../assets/images/первый экран/main УУД.svg" alt="test1" />
+          <img src="../assets/images/firstScreen/mainUUD.svg" alt="test1" />
 
           <p class="choice-card__title">
             Обучающиеся с задержкой психического развития
@@ -40,7 +40,7 @@ export default({
           <div class="choice-card__card">
             <img
               onclick="indexTobow()"
-              src="../assets/images/первый экран/main БУД.svg"
+              src="../assets/images/firstScreen/mainBUD.svg"
               alt="test2"
             />
 

@@ -57,7 +57,7 @@ export default {
       <div class="header__container">
         <div class="first-page__logo">
           <img
-            src="../assets/images/первый экран/header лого+текст.svg"
+            src="../assets/images/firstScreen/footerKubsuLogo.svg"
             alt="logo"
           />
         </div>

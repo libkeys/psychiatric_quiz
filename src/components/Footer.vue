@@ -3,7 +3,7 @@
     <div class="container">
       <div class="footer__kubsu-block">
         <img
-          src="../assets/images/первый экран/footer kubsu logo.svg"
+          src="../assets/images/firstScreen/footerKubsuLogo.svg"
           alt="kubsulogo"
         />
         <p class="footer__text">Кубанский государственный университет, 2023</p>

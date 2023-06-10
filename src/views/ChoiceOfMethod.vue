@@ -16,10 +16,10 @@ export default {
       let studentId = getCookie("studentId");
       let requestData = {
         type: type,
-        datePoll : datePoll,
+        date : datePoll,
         studentId : studentId
       };
-      let result = fetch("http://localhost:3000/save_monitoring_type", {
+      let result = fetch("http://localhost:3000/save_monitoring", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -48,10 +48,10 @@ export default {
       </div>
 
       <div class="choice-card">
-        <RouterLink @click="saveType(1)" to="observation_test">
+        <RouterLink to="observation_test">
           <div class="choice-card__card">
             <img
-              src="../assets/images/выбор методики/наблюдение.svg"
+              src="../assets/images/methodChoice/observation.svg"
               alt="observation"
             />
 
@@ -74,7 +74,7 @@ export default {
           <div class="choice-card__card">
             <img
               onclick="cmToMs()"
-              src="../assets/images/выбор методики/беседа.svg"
+              src="../assets/images/methodChoice/speaking.svg"
               alt="conversation"
             />
 
@@ -96,8 +96,7 @@ export default {
         <RouterLink @click="saveType(3)" to="../experiment_test">
           <div class="choice-card__card">
             <img
-              onclick="cmToMs3()"
-              src="../assets/images/выбор методики/эксперемент.svg"
+              src="../assets/images/methodChoice/experiment.svg"
               alt="experiment"
             />
 
@@ -123,7 +122,7 @@ export default {
             <div onclick="cmToSp()" class="button__text">Назад</div>
 
             <div class="button__row">
-              <img src="image/beegining of work/bow__row-icon.svg" alt="" />
+              <!-- <img src="image/beegining of work/bow__row-icon.svg" alt="" /> -->
             </div>
           </div>
         </div>

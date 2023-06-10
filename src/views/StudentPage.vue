@@ -12,6 +12,7 @@ export default {
       studentId: 0,
       monitoringDate: "",
       lastMonitoringType: 0,
+      checkMonitoring: false, //необходимо для кнопки продолжить заполнение
       content: [
         {
           sectionTitle: "Личностные базовые учебные действия",
@@ -344,6 +345,7 @@ export default {
       console.log(this.monitoringDate);
       if (this.monitoringDate == "" || this.monitoringDate == undefined) {
         let answer = "Мониторингов не проводилось";
+        this.checkMonitoring = true;
         return answer;
       }
       let date = new Date(this.monitoringDate);
@@ -357,7 +359,7 @@ export default {
       }
 
       let answer = `Результаты мониторинга ${day} ${month} ${year}`;
-      console.log(this.monitoringDate)
+      console.log(this.monitoringDate);
       // const monthName = monthNames[monthIndex];
       return answer;
     },
@@ -495,23 +497,22 @@ export default {
         console.log(error);
       }
     },
-    pathMonitoring() {
-      let answer = "../observation_test";
+    async pathMonitoring() {
       setTimeout(() => {
+        console.log(this.monitoringDate)
         switch (this.monitoringDate) {
           case "1":
-            answer = "../observation_test";
+            this.$router.push({ path: "/observation_test" });
             break;
           case "2":
-            answer = "../talking_test";
+            this.$router.push({ path: "/speaking_test" });
             break;
           case "3":
-            answer = "../experiment_test";
+            this.$router.push({ path: "/experimental_test" });
             break;
         }
-        return answer;
       }, 500);
-      return answer;
+      // return answer;
     },
   },
   created() {
@@ -631,7 +632,7 @@ export default {
             </div>
           </RouterLink>
           <div class="button__row">
-            <img src="image/beegining of work/bow__row-icon.svg" alt="" />
+            <!-- <img src="image/beegining of work/bow__row-icon.svg" alt="" /> -->
           </div>
         </div>
       </div>
@@ -644,9 +645,22 @@ export default {
 
         <div class="results">
           <div class="results__button">
-            <RouterLink :to="pathMonitoring()">
-              <button class="btn btn-primary">Продолжить заполнение</button>
-            </RouterLink>
+            <!-- <RouterLink :to="pathMonitoring()"> -->
+            <button
+              v-on:click="pathMonitoring()"
+              v-if="!checkMonitoring"
+              class="btn btn-primary"
+            >
+              Продолжить заполнение
+            </button>
+            <button
+              v-on:click="pathMonitoring()"
+              v-if="checkMonitoring"
+              class="btn btn-primary"
+            >
+              Начать заполнение
+            </button>
+            <!-- </RouterLink> -->
           </div>
           <div
             v-for="(item, index) in content"

@@ -122,7 +122,6 @@ export default {
       let idRadio = this.idArray[index - 1]; //don't need maybe
       //необходимо чтобы данные addition записались
       setTimeout(() => {
-        console.log(this.addition[index]);
         this.$emit(
           "saveRadioDataGroup",
           data,
@@ -136,7 +135,7 @@ export default {
       if (item.reference != "" && item.reference != undefined) {
         return true;
       } else {
-        console.log(item)
+        console.log(item);
         return false;
       }
     },
@@ -146,12 +145,10 @@ export default {
     saveAddition(value, index) {
       this.updateAddition = false;
       this.addition[index] = value;
-      console.log(this.addition[index]);
-      console.log('saved')
     },
     createdAddition() {
       this.items.forEach((el, index) => {
-        console.log(el.addition);
+        // console.log(el.addition);
         // console.log(Reflect.get(el, 'addition'));
         // el.forEach((elQuestion, indexQuestion) => {
         //   if (elQuestion.addition) {
@@ -176,7 +173,7 @@ export default {
   },
   created() {
     this.createdAddition();
-    console.log(this.items);
+    // console.log(this.items);
   },
   components: {
     ObservationRadioButtons,
@@ -219,10 +216,10 @@ export default {
               {{ item.text }}
             </p>
             <img
-                @click="toggleInfo(index)"
-                class="question-group__reference"
-                src="../assets/images/первый экран/header faq.svg"
-              />
+              @click="toggleInfo(index)"
+              class="question-group__reference"
+              src="../assets/images/firstScreen/headerFaq.svg"
+            />
             <!-- <img
               v-if="existsInfo(item)"
               class="question-group__info-icon"
@@ -238,7 +235,13 @@ export default {
             <p>{{ item.info }}</p>
           </div> -->
           <div class="question-group__extended" v-if="existsInfo(item)">
-            <div class="question-group__text-extended-wrapper" :class="{'question-group__text-extended-wrapper_active' : showInfo[index + 1]}">
+            <div
+              class="question-group__text-extended-wrapper"
+              :class="{
+                'question-group__text-extended-wrapper_active':
+                  showInfo[index + 1],
+              }"
+            >
               <p class="question-group__text-item">
                 {{ item.reference }}
               </p>
@@ -272,7 +275,14 @@ export default {
             />
           </div>
           <div class="question-group__radio-buttons" v-if="checkThirdType()">
-            <ExperimentRadioButtons :options="item.options"/>
+            <ExperimentRadioButtons
+              :options="item.options"
+              :indexCreated="index"
+              :indexToUpdate="indexToUpdate"
+              :updateRadioValue="updateRadioValue"
+              :points="item.points"
+              @send-radio-data="saveRadioData"
+            />
           </div>
           <div class="question-group__buttons">
             <button
@@ -345,7 +355,7 @@ export default {
   }
   &__item {
     margin-bottom: 100px;
-    &:last-child{
+    &:last-child {
       margin-bottom: 0;
     }
     width: 100%;
@@ -395,30 +405,29 @@ export default {
     // }
   }
   &__extended {
-
   }
   &__text-extended-wrapper {
     display: flex;
     justify-content: space-between;
     width: 100%;
     height: 0px;
-    transition: .5s;
+    transition: 0.5s;
     p {
       width: 800px;
       margin-left: -1000px;
-      transition: .5s;
+      transition: 0.5s;
     }
     img {
       margin-top: -20px;
       margin-right: 10px;
       cursor: pointer;
     }
-    &_active{
+    &_active {
       height: 100%;
-      transition: .5s;
-      p{
+      transition: 0.5s;
+      p {
         margin-left: 0;
-        transition: .5s;
+        transition: 0.5s;
       }
     }
   }
@@ -430,7 +439,7 @@ export default {
     justify-content: space-between;
     width: 100%;
 
-    .question-group__text-item{
+    .question-group__text-item {
       width: 800px;
     }
   }

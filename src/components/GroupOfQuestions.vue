@@ -20,8 +20,6 @@ export default {
     QuestionItem,
   },
   created() {
-    console.log(this.items)
-    // this.check();
   },
   props: {
     typeOfRadio: {

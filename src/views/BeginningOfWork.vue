@@ -25,7 +25,7 @@ export default({
           <div class="choice-card__card">
             <img
               onclick="bowToaddstudent()"
-              src="../assets/images/beegining of work/addstudent.svg"
+              src="../assets/images/beginningOfWork/addstudent.svg"
               alt="addstudent"
             />
             <p class="choice-card__title">Добавить ученика</p>
@@ -36,7 +36,7 @@ export default({
           <div class="choice-card__card">
             <img
               onclick="bowTocreateclass()"
-              src="../assets/images/beegining of work/createclass.svg"
+              src="../assets/images/beginningOfWork/createclass.svg"
               alt="createclass"
             />
             <p class="choice-card__title">Создать класс</p>
@@ -47,7 +47,7 @@ export default({
           <div class="choice-card__card">
             <img
               onclick="bowTostudentsearch()"
-              src="../assets/images/beegining of work/findstudent.svg"
+              src="../assets/images/beginningOfWork/findstudent.svg"
               alt="findstudent"
             />
 
@@ -62,10 +62,10 @@ export default({
               Вернуться к категориям
             </div>
             <div class="button__row">
-              <img
+              <!-- <img
                 src="../assets/images/beegining of work/bow__row-icon.svg"
                 alt=""
-              />
+              /> -->
             </div>
           </div>
         </div>

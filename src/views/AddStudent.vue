@@ -204,7 +204,7 @@ export default {
           </div>
 
           <div class="button__row">
-            <img src="image/beegining of work/bow__row-icon.svg" alt="" />
+            <!-- <img src="image/beegining of work/bow__row-icon.svg" alt="" /> -->
           </div>
         </div>
         <RouterLink to="../create_class">
@@ -214,7 +214,7 @@ export default {
             </div>
 
             <div class="button__row">
-              <img src="image/beegining of work/bow__row-icon.svg" alt="" />
+              <!-- <img src="image/beegining of work/bow__row-icon.svg" alt="" /> -->
             </div>
           </div>
         </RouterLink>

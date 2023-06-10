@@ -276,13 +276,12 @@ export default {
         </div>
 
         <div
-          onclick="bowToaddstudent()"
           class="button__container button__container--two-button"
         >
           <div class="button__text">Добавить нового ученика</div>
 
           <div class="button__row">
-            <img src="image/beegining of work/bow__row-icon.svg" alt="" />
+            <!-- <img src="image/beegining of work/bow__row-icon.svg" alt="" /> -->
           </div>
         </div>
       </div>
