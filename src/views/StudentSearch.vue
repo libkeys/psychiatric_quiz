@@ -101,8 +101,8 @@ export default {
       }
       let login = getCookie("userLogin");
       let requestData = {
-        login: login
-      }
+        login: login,
+      };
 
       try {
         let result = fetch("http://localhost:3000/all_students", {
@@ -111,7 +111,7 @@ export default {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(requestData)
+          body: JSON.stringify(requestData),
         }).then((data) => {
           let answer = data.text();
           return answer;
@@ -275,15 +275,15 @@ export default {
           </div>
         </div>
 
-        <div
-          class="button__container button__container--two-button"
-        >
-          <div class="button__text">Добавить нового ученика</div>
+        <RouterLink to="../add_student">
+          <div class="button__container button__container--two-button">
+            <div class="button__text">Добавить нового ученика</div>
 
-          <div class="button__row">
-            <!-- <img src="image/beegining of work/bow__row-icon.svg" alt="" /> -->
+            <div class="button__row">
+              <!-- <img src="image/beegining of work/bow__row-icon.svg" alt="" /> -->
+            </div>
           </div>
-        </div>
+        </RouterLink>
       </div>
 
       <div class="list">

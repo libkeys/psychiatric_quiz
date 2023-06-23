@@ -359,8 +359,7 @@ export default {
       }
 
       let answer = `Результаты мониторинга ${day} ${month} ${year}`;
-      console.log(this.monitoringDate);
-      // const monthName = monthNames[monthIndex];
+      this.checkMonitoring = false;
       return answer;
     },
     checkDeclination(points) {
@@ -499,15 +498,15 @@ export default {
     },
     async pathMonitoring() {
       setTimeout(() => {
-        console.log(this.monitoringDate)
-        switch (this.monitoringDate) {
-          case "1":
+        console.log(this.lastMonitoringType)
+        switch (this.lastMonitoringType) {
+          case 1:
             this.$router.push({ path: "/observation_test" });
             break;
-          case "2":
+          case 2:
             this.$router.push({ path: "/speaking_test" });
             break;
-          case "3":
+          case 3:
             this.$router.push({ path: "/experimental_test" });
             break;
         }

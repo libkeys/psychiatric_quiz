@@ -21,9 +21,9 @@ app.get('/', cors(), (req, res) => {
 // sometimes works bad and strange, there are just pending statuses on requests
 const connection = mysql.createConnection({
   host: 'sql7.freemysqlhosting.net',
-  user: 'sql7618544',
-  database: 'sql7618544',
-  password: 'ba7uTQHGbL'
+  user: 'sql7627990',
+  database: 'sql7627990',
+  password: 'ujdMRAXWxt'
 });
 
 // const connection = mysql.createConnection({
