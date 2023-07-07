@@ -1,6 +1,6 @@
-# vue-project-4
+# psychiatric_quiz
 
-This template should help get you started developing with Vue 3 in Vite.
+This project was made for KubSU as a student project on Vue.js
 
 ## Recommended IDE Setup
 
@@ -27,3 +27,11 @@ npm run dev
 ```sh
 npm run build
 ```
+
+### Launch Node.js server
+
+```sh
+node app.js
+```
+
+If node.js is't installed on your computer, you can download it from the official website
