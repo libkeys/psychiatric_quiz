@@ -19,6 +19,7 @@ export default {
         date : datePoll,
         studentId : studentId
       };
+      console.log(requestData)
       let result = fetch("http://localhost:3000/save_monitoring", {
         method: "POST",
         mode: "cors",
@@ -48,7 +49,7 @@ export default {
       </div>
 
       <div class="choice-card">
-        <RouterLink to="observation_test">
+        <RouterLink @click="saveType(1)" to="observation_test">
           <div class="choice-card__card">
             <img
               src="../assets/images/methodChoice/observation.svg"

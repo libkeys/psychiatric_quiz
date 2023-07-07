@@ -271,7 +271,7 @@ export default {
               :indexToUpdate="indexToUpdate"
               :updateRadioValue="updateRadioValue"
               :points="item.points"
-              @send-radio-data="saveRadioData"
+              @send-radio-data="(data) => saveRadioData(data, index)"
             />
           </div>
           <div class="question-group__radio-buttons" v-if="checkThirdType()">
@@ -281,7 +281,7 @@ export default {
               :indexToUpdate="indexToUpdate"
               :updateRadioValue="updateRadioValue"
               :points="item.points"
-              @send-radio-data="saveRadioData"
+              @send-radio-data="(data) => saveRadioData(data, index)"
             />
           </div>
           <div class="question-group__buttons">

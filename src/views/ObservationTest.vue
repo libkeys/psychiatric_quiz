@@ -77,6 +77,7 @@ export default {
       }
     },
     saveRadio(data, itemText, addition) {
+      console.log(addition)
       // console.log(data + ' ' + id)
       function getCookie(name) {
         let matches = document.cookie.match(
@@ -143,12 +144,12 @@ export default {
           items: [
             {
               text: "проявляет ответственное поведение (трансляция заданий учителя дома взрослым, беспокойство по поводу соблюдения требований)",
-              idQuestion: 47,
+              idQuestion: 34,
               points: 0,
             },
             {
               text: "следит за своим внешним видом, аккуратно и сдержанно принимает пищу",
-              idQuestion: 48,
+              idQuestion: 35,
               points: 0,
             },
           ],
@@ -353,7 +354,7 @@ export default {
           items: [
             {
               points: 0,
-              idQuestion: 50,
+              idQuestion: 33,
               text: `обращается за помощью и использует помощь`,
             },
           ],
@@ -441,7 +442,7 @@ export default {
           items: [
             {
               points: 0,
-              idQuestion: 49,
+              idQuestion: 32,
               text: `наблюдает под руководством взрослого за предметами и явлениями
               окружающей действительности`,
             },
