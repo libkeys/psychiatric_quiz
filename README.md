@@ -1,29 +1,13 @@
-# vue-project-4
+# psychiatric_quiz
 
-This template should help get you started developing with Vue 3 in Vite.
+This project was made for KubSU as a student project on Vue.js
 
-## Recommended IDE Setup
+## Инструкция по установке
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+1. Скачайте проект ![image](https://github.com/libkeys/psychiatric_quiz/assets/57828103/54c199b6-d2af-438d-9980-8383d721a84a)
+2. Скачайте и установите программу по ссылке https://nodejs.org/en
+3. откройте консоль
+4. введите команду npm install
+5. введите команду npm run dev
+6. откройте ещё одну консоль и введите node app.js
+7. перейдите по ссылке http://localhost:5173
